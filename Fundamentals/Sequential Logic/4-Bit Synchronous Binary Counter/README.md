@@ -1,10 +1,19 @@
-🔹 Description
+# 🧩 4-Bit Synchronous Binary Counter
+
+## 🔍 Description
 
 All flip-flops are triggered simultaneously by a common clock.
 Combinational logic between stages ensures correct binary counting.
 This avoids propagation delay issues present in ripple counters.
 
-🔹 Truth Table
+## ⚙️ Working
+
+- FF0 toggles on each pulse.
+- FF1 toggles when Q0 = 1 and clock edge arrives.
+- FF2 toggles when Q0 & Q1 = 1, and so on.
+
+
+## 🧠 Truth Table
  | Clock Pulses | Q3 | Q2 | Q1 | Q0 |
 | ------------ | -- | -- | -- | -- |
 | 0            | 0  | 0  | 0  | 0  |
@@ -23,3 +32,8 @@ This avoids propagation delay issues present in ripple counters.
 | 13            | 1  | 1  | 0  | 1  |
 | 14            | 1  | 1  | 1  | 0  |
 | 15            | 1  | 1  | 1  | 1  |
+
+## ▶️ How to Run
+1. Connect clock to all FFs.
+2. Use AND gates for enable control signals.
+3. Step the clock → observe Q0–Q3 counting synchronously.
