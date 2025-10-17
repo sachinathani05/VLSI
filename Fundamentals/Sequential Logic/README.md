@@ -17,3 +17,19 @@ Truth tables and brief theoretical explanations are included for reference.
 8. SIPO (Serial-In Parallel-Out)  
 9. SISO (Serial-In Serial-Out)  
 10. SR Latch
+
+---
+
+## 🧠 Notes
+- All designs simulated in **Logisim Evolution**  
+- You can modify clock frequency, propagation delays, or gate styles for visualization  
+- Great for learning counters, registers, and sequential logic  
+
+---
+
+## ✨ Author
+**Sachin Athani**  
+MS in Microelectronics (Newcastle University)  
+Passionate about VLSI Design, CMOS, and Digital Logic Systems.
+
+---
