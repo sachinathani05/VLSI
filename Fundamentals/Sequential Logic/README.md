@@ -30,6 +30,6 @@ Truth tables and brief theoretical explanations are included for reference.
 ## ✨ Author
 **Sachin Athani**  
 MS in Microelectronics (Newcastle University)  
-Passionate about VLSI Design, CMOS, and Digital Logic Systems.
+Passionate about VLSI Design and Digital Logic Systems.
 
 ---
