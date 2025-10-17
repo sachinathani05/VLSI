@@ -1,19 +1,19 @@
-# 🧮 4-Bit Ripple (Asynchronous) Counter
+## 🧩 4-Bit Ripple (Asynchronous) Counter
 
-## 🔍 Description
+### 🔍 Description
 
 A 4-bit ripple counter consists of 4 flip-flops connected in series, where the output of one flip-flop acts as the clock input for the next.
 It’s called asynchronous because not all flip-flops are triggered simultaneously — the clock “ripples” through them.
 
 
-## ⚙️ Working
+### ⚙️ Working
 
 The first FF toggles on every clock pulse.
 Each subsequent FF toggles when the previous output goes from HIGH → LOW.
 
 
 
-## 🧠 Truth Table
+### 🧠 Truth Table
 | Clock Pulses | Q3 | Q2 | Q1 | Q0 |
 | ------------ | -- | -- | -- | -- |
 | 0            | 0  | 0  | 0  | 0  |
@@ -34,7 +34,7 @@ Each subsequent FF toggles when the previous output goes from HIGH → LOW.
 | 15            | 1  | 1  | 1  | 1  |
 
 
-## ▶️ How to Run
+### ▶️ How to Run
 1. Open Logisim → Load your circuit.
 2. Set the clock input.
 3. Observe Q0–Q3 on each clock pulse.
