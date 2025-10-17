@@ -1,1 +1,1 @@
-# VLSI-Foundation-Sequential-logic
+# VLSI
