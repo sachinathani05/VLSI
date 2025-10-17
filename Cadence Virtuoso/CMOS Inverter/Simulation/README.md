@@ -14,7 +14,7 @@
 - Shows **propagation delay**, **rise time**, and **fall time**.
 
   <p align="center">
-  <img src="schematic/cmos_inv_dc_transfer.grf" width="500">
+  <img src="CMOS_Inv_DC_Char.jpg" width="500">
 </p>
 ---
 
@@ -31,5 +31,5 @@
 Smooth S-shaped VTC with switching point ≈ VDD / 2.
 
 <p align="center">
-  <img src="schematic/cmos_inv_dc_transfer.grf" width="500">
+  <img src="CMOS_Inv_Trans_Char.jpg" width="500">
 </p>
