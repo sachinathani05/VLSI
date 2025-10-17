@@ -1,5 +1,4 @@
-## 🧱 Layout Design 
-### Steps to Build Layout
+## 🧱 Layout Design - Steps to Build Layout
 
 ### ⚙️ Technology & Simulation Setup
 
