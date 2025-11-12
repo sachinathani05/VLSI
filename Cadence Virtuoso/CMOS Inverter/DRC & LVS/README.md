@@ -58,6 +58,7 @@ The process ensures that your physical design follows all fabrication rules (DRC
 ### **Steps**
 1. Open: Verify → LVS
 2. Fill form:
+
 | Field | Value |
 |--------|--------|
 | Library | Your project library |
@@ -66,8 +67,8 @@ The process ensures that your physical design follows all fabrication rules (DRC
 | Layout View | layout |
 | Run Directory | default or custom folder |
 
-3. Enable **Run Extracted View** if available  
-4. Click **Run**
+4. Enable **Run Extracted View** if available  
+5. Click **Run**
 
 ### **Check Report**
 If `Results → LVS Debug` is not visible:
