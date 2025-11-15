@@ -1,0 +1,239 @@
+
+Cadence (R) Virtuoso (R) Spectre (R) Circuit Simulator
+Version 12.1.0.347.isr3 32bit -- 10 Jan 2013
+Copyright (C) 1989-2012 Cadence Design Systems, Inc. All rights reserved worldwide. Cadence, Virtuoso and Spectre are registered trademarks of Cadence Design Systems, Inc. All others are the property of their respective holders.
+
+Protected by U.S. Patents: 
+        5,610,847; 5,790,436; 5,812,431; 5,859,785; 5,949,992; 5,987,238; 
+        6,088,523; 6,101,323; 6,151,698; 6,181,754; 6,260,176; 6,278,964; 
+        6,349,272; 6,374,390; 6,493,849; 6,504,885; 6,618,837; 6,636,839; 
+        6,778,025; 6,832,358; 6,851,097; 6,928,626; 7,024,652; 7,035,782; 
+        7,085,700; 7,143,021; 7,493,240; 7,571,401.
+
+Includes RSA BSAFE(R) Cryptographic or Security Protocol Software from RSA Security, Inc.
+
+User: buet   Host: cadence   HostID: 7F0100   PID: 11145
+Memory  available: 705.1796 MB  physical: 1.9348 GB
+CPU Type: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+          Processor PhysicalID CoreID Frequency
+              0         0        0     2592.0
+              1         0        1     2592.0
+
+
+Simulating `input.scs' on cadence at 3:08:08 AM, Sat Nov 15, 2025 (process id: 11145).
+Current working directory: /home/buet/simulation/Ring_Oscillator/spectre/schematic/netlist.
+Command line:
+    /home/buet/cadence/MMSIM121/tools.lnx86/spectre/bin/32bit/spectre  \
+        input.scs +escchars +log ../psf/spectre.out +inter=mpsc  \
+        +mpssession=spectre5_7984_27 -format psfxl -raw ../psf  \
+        +lqtimeout 900 -maxw 5 -maxn 5
+spectre pid = 11145
+
+Loading /home/buet/cadence/MMSIM121/tools.lnx86/cmi/lib/5.0/libinfineon_sh.so ...
+Loading /home/buet/cadence/MMSIM121/tools.lnx86/cmi/lib/5.0/libphilips_o_sh.so ...
+Loading /home/buet/cadence/MMSIM121/tools.lnx86/cmi/lib/5.0/libphilips_sh.so ...
+Loading /home/buet/cadence/MMSIM121/tools.lnx86/cmi/lib/5.0/libsparam_sh.so ...
+Loading /home/buet/cadence/MMSIM121/tools.lnx86/cmi/lib/5.0/libstmodels_sh.so ...
+Reading file:  /home/buet/simulation/Ring_Oscillator/spectre/schematic/netlist/input.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_mos.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_mos_iso.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_resistor.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/resd_va.va
+Reading link:  /home/buet/cadence/MMSIM121/tools.lnx86/spectre/etc/ahdl/discipline.h
+Reading file:  /home/buet/cadence/MMSIM121/tools.lnx86/spectre/etc/ahdl/disciplines.vams
+Reading link:  /home/buet/cadence/MMSIM121/tools.lnx86/spectre/etc/ahdl/constants.h
+Reading file:  /home/buet/cadence/MMSIM121/tools.lnx86/spectre/etc/ahdl/constants.vams
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/rnoise_va.va
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_capacitor.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_diode.scs
+Reading file:  /home/buet/cadence/gpdk090_v4.6/models/spectre/gpdk090_bipolar.scs
+
+Time for NDB Parsing: CPU = 292.954 ms, elapsed = 281.641 ms.
+Time accumulated: CPU = 292.954 ms, elapsed = 281.641 ms.
+Peak resident memory used = 32.3 Mbytes.
+
+
+Time for Elaboration: CPU = 13.998 ms, elapsed = 15.2409 ms.
+Time accumulated: CPU = 307.952 ms, elapsed = 297.011 ms.
+Peak resident memory used = 34.8 Mbytes.
+
+
+Time for EDB Visiting: CPU = 0 s, elapsed = 401.02 us.
+Time accumulated: CPU = 308.952 ms, elapsed = 297.566 ms.
+Peak resident memory used = 35.1 Mbytes.
+
+
+Warning from spectre during initial setup.
+    WARNING (CMI-2477): I0.PM0: `Rds' = 3.13253 uOhm is less than 0.001. Set to 0.
+
+
+Circuit inventory:
+              nodes 4
+            bsim3v3 6     
+            vsource 1     
+
+
+Warning from spectre during initial setup.
+    WARNING (CMI-2477): I0.PM0: `Rds' = 3.13253 uOhm is less than 0.001. Set to 0.
+
+
+Time for parsing: CPU = 2 ms, elapsed = 2.07901 ms.
+Time accumulated: CPU = 311.952 ms, elapsed = 299.758 ms.
+Peak resident memory used = 35.8 Mbytes.
+
+Entering remote command mode using MPSC service (spectre, ipi, v0.0, spectre5_7984_27, ).
+
+Warning from spectre.
+    WARNING (SPECTRE-16707): Only tran supports psfxl format, result of other analyses will be in psfbin format.
+
+
+************************************************
+Transient Analysis `tran': time = (0 s -> 10 ns)
+************************************************
+
+Notice from spectre during IC analysis, during transient analysis `tran'.
+    There are 1 IC nodes defined.
+Notice from spectre during IC analysis, during transient analysis `tran'.
+    Initial condition computed for node osc_out is in error by 287.311 uV.
+        Decrease `rforce' to reduce error in computed initial conditions.  However, setting rforce too small may result in convergence difficulties or in the matrix becoming singular.
+
+DC simulation time: CPU = 0 s, elapsed = 757.217 us.
+Important parameter values:
+    start = 0 s
+    outputstart = 0 s
+    stop = 10 ns
+    step = 10 ps
+    maxstep = 200 ps
+    ic = all
+    useprevic = no
+    skipdc = no
+    reltol = 1e-03
+    abstol(V) = 1 uV
+    abstol(I) = 1 pA
+    temp = 27 C
+    tnom = 27 C
+    tempeffects = all
+    errpreset = moderate
+    method = traponly
+    lteratio = 3.5
+    relref = sigglobal
+    cmin = 0 F
+    gmin = 1 pS
+
+    tran: time = 250.7 ps    (2.51 %), step = 22.11 ps     (221 m%)
+    tran: time = 770.2 ps     (7.7 %), step = 23.44 ps     (234 m%)
+    tran: time = 1.251 ns    (12.5 %), step = 19.89 ps     (199 m%)
+    tran: time = 1.763 ns    (17.6 %), step = 13.57 ps     (136 m%)
+    tran: time = 2.262 ns    (22.6 %), step = 26.45 ps     (265 m%)
+    tran: time = 2.751 ns    (27.5 %), step = 28.66 ps     (287 m%)
+    tran: time = 3.258 ns    (32.6 %), step = 22.27 ps     (223 m%)
+    tran: time = 3.763 ns    (37.6 %), step = 23.72 ps     (237 m%)
+    tran: time = 4.262 ns    (42.6 %), step = 19.28 ps     (193 m%)
+    tran: time = 4.754 ns    (47.5 %), step = 13.66 ps     (137 m%)
+    tran: time = 5.254 ns    (52.5 %), step = 26.4 ps      (264 m%)
+    tran: time = 5.766 ns    (57.7 %), step = 23.43 ps     (234 m%)
+    tran: time = 6.27 ns     (62.7 %), step = 21.15 ps     (212 m%)
+    tran: time = 6.754 ns    (67.5 %), step = 23.7 ps      (237 m%)
+    tran: time = 7.253 ns    (72.5 %), step = 19.37 ps     (194 m%)
+    tran: time = 7.759 ns    (77.6 %), step = 13.26 ps     (133 m%)
+    tran: time = 8.274 ns    (82.7 %), step = 28.72 ps     (287 m%)
+    tran: time = 8.758 ns    (87.6 %), step = 23.38 ps     (234 m%)
+    tran: time = 9.261 ns    (92.6 %), step = 21.27 ps     (213 m%)
+    tran: time = 9.765 ns    (97.6 %), step = 19.72 ps     (197 m%)
+Number of accepted tran steps =             488
+
+Notice from spectre during transient analysis `tran'.
+    Trapezoidal ringing is detected during tran analysis.
+        Please use method=trap for better results and performance.
+
+Initial condition solution time: CPU = 0 s, elapsed = 780.821 us.
+Intrinsic tran analysis time:    CPU = 32.994 ms, elapsed = 43.0121 ms.
+Total time required for tran analysis `tran': CPU = 34.994 ms, elapsed = 45.9929 ms.
+Time accumulated: CPU = 347.946 ms, elapsed = 387.178 ms.
+Peak resident memory used = 37.2 Mbytes.
+
+finalTimeOP: writing operating point information to rawfile.
+modelParameter: writing model parameter values to rawfile.
+element: writing instance parameter values to rawfile.
+outputParameter: writing output parameter values to rawfile.
+designParamVals: writing netlist parameters to rawfile.
+primitives: writing primitives to rawfile.
+subckts: writing subcircuits to rawfile.
+
+Warning from spectre.
+    WARNING (SPECTRE-16707): Only tran supports psfxl format, result of other analyses will be in psfbin format.
+
+
+************************************************
+Transient Analysis `tran': time = (0 s -> 10 ns)
+************************************************
+
+Notice from spectre during IC analysis, during transient analysis `tran'.
+    There are 1 IC nodes defined.
+Notice from spectre during IC analysis, during transient analysis `tran'.
+    Initial condition computed for node osc_out is in error by 287.311 uV.
+        Decrease `rforce' to reduce error in computed initial conditions.  However, setting rforce too small may result in convergence difficulties or in the matrix becoming singular.
+
+DC simulation time: CPU = 0 s, elapsed = 370.979 us.
+Important parameter values:
+    start = 0 s
+    outputstart = 0 s
+    stop = 10 ns
+    step = 10 ps
+    maxstep = 200 ps
+    ic = all
+    useprevic = no
+    skipdc = no
+    reltol = 1e-03
+    abstol(V) = 1 uV
+    abstol(I) = 1 pA
+    temp = 27 C
+    tnom = 27 C
+    tempeffects = all
+    errpreset = moderate
+    method = traponly
+    lteratio = 3.5
+    relref = sigglobal
+    cmin = 0 F
+    gmin = 1 pS
+
+    tran: time = 250.7 ps    (2.51 %), step = 22.11 ps     (221 m%)
+    tran: time = 770.2 ps     (7.7 %), step = 23.44 ps     (234 m%)
+    tran: time = 1.251 ns    (12.5 %), step = 19.89 ps     (199 m%)
+    tran: time = 1.763 ns    (17.6 %), step = 13.57 ps     (136 m%)
+    tran: time = 2.262 ns    (22.6 %), step = 26.45 ps     (265 m%)
+    tran: time = 2.751 ns    (27.5 %), step = 28.66 ps     (287 m%)
+    tran: time = 3.258 ns    (32.6 %), step = 22.27 ps     (223 m%)
+    tran: time = 3.763 ns    (37.6 %), step = 23.72 ps     (237 m%)
+    tran: time = 4.262 ns    (42.6 %), step = 19.28 ps     (193 m%)
+    tran: time = 4.754 ns    (47.5 %), step = 13.66 ps     (137 m%)
+    tran: time = 5.254 ns    (52.5 %), step = 26.4 ps      (264 m%)
+    tran: time = 5.766 ns    (57.7 %), step = 23.43 ps     (234 m%)
+    tran: time = 6.27 ns     (62.7 %), step = 21.15 ps     (212 m%)
+    tran: time = 6.754 ns    (67.5 %), step = 23.7 ps      (237 m%)
+    tran: time = 7.253 ns    (72.5 %), step = 19.37 ps     (194 m%)
+    tran: time = 7.759 ns    (77.6 %), step = 13.26 ps     (133 m%)
+    tran: time = 8.274 ns    (82.7 %), step = 28.72 ps     (287 m%)
+    tran: time = 8.758 ns    (87.6 %), step = 23.38 ps     (234 m%)
+    tran: time = 9.261 ns    (92.6 %), step = 21.27 ps     (213 m%)
+    tran: time = 9.765 ns    (97.6 %), step = 19.72 ps     (197 m%)
+Number of accepted tran steps =             488
+
+Notice from spectre during transient analysis `tran'.
+    Trapezoidal ringing is detected during tran analysis.
+        Please use method=trap for better results and performance.
+
+Initial condition solution time: CPU = 0 s, elapsed = 389.099 us.
+Intrinsic tran analysis time:    CPU = 27.996 ms, elapsed = 41.4841 ms.
+Total time required for tran analysis `tran': CPU = 27.996 ms, elapsed = 42.5661 ms.
+Time accumulated: CPU = 510.922 ms, elapsed = 2.59227 ks (43m  12.3s).
+Peak resident memory used = 37.6 Mbytes.
+
+finalTimeOP: writing operating point information to rawfile.
+modelParameter: writing model parameter values to rawfile.
+element: writing instance parameter values to rawfile.
+outputParameter: writing output parameter values to rawfile.
+designParamVals: writing netlist parameters to rawfile.
+primitives: writing primitives to rawfile.
+subckts: writing subcircuits to rawfile.

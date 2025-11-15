@@ -1,0 +1,6 @@
+wp_ratio ,frequency(getData("/osc_out" ?result "tran"))
+1.000,288.4E6
+2.000,484.6E6
+3.000,626.1E6
+4.000,732.7E6
+5.000,816.2E6
