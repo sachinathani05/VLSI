@@ -7,7 +7,7 @@ A ring oscillator consists of an **odd number of inverters** connected in a loop
 
 ---
 
-# 🧠 1. Background Theory
+# 🧠 Background Theory
 
 ## 🔁 What Is a Ring Oscillator?
 A **ring oscillator** is made using an odd number of inverters. The output of the final inverter feeds back into the input of the first one.
