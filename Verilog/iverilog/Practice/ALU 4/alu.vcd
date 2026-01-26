@@ -1,0 +1,100 @@
+$date
+	Fri Jan 02 19:11:47 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb_alu4 $end
+$var wire 1 ! zero $end
+$var wire 4 " result [3:0] $end
+$var wire 1 # carry $end
+$var reg 4 $ a [3:0] $end
+$var reg 4 % b [3:0] $end
+$var reg 3 & op [2:0] $end
+$scope module DUT $end
+$var wire 4 ' a [3:0] $end
+$var wire 4 ( b [3:0] $end
+$var wire 3 ) op [2:0] $end
+$var wire 1 ! zero $end
+$var reg 1 # carry $end
+$var reg 4 * result [3:0] $end
+$var reg 5 + temp [4:0] $end
+$upscope $end
+$scope task check $end
+$var reg 1 , exp_carry $end
+$var reg 4 - exp_res [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx -
+x,
+b1000 +
+b1000 *
+b0 )
+b11 (
+b101 '
+b0 &
+b11 %
+b101 $
+0#
+b1000 "
+0!
+$end
+#5
+1#
+1!
+b0 "
+b0 *
+b10000 +
+b1 %
+b1 (
+b1111 $
+b1111 '
+0,
+b1000 -
+#10
+0!
+b101 "
+b101 *
+b101 +
+0#
+b1 &
+b1 )
+b10 %
+b10 (
+b111 $
+b111 '
+1,
+b0 -
+#15
+b1000 "
+b1000 *
+b0 +
+b10 &
+b10 )
+b1010 %
+b1010 (
+b1100 $
+b1100 '
+0,
+b101 -
+#20
+b1110 "
+b1110 *
+b11 &
+b11 )
+b1000 -
+#25
+b110 "
+b110 *
+b100 &
+b100 )
+b1110 -
+#30
+b110 -
+#40
