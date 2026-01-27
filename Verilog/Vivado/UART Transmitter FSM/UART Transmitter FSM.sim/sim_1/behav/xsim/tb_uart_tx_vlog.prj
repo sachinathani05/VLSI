@@ -1,0 +1,11 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" \
+"../../../../UART Transmitter FSM.srcs/sources_1/new/baud_gen.v" \
+"../../../../UART Transmitter FSM.srcs/sources_1/new/uart_tx.v" \
+"../../../../UART Transmitter FSM.srcs/sim_1/new/tb_uart_tx.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
