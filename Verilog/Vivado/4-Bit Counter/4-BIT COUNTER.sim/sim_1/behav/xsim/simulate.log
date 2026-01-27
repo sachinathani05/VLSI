@@ -1,0 +1,63 @@
+Time resolution is 1 ps
+========================================
+  4-BIT COUNTER TESTBENCH
+========================================
+
+[TEST 1] Reset Test
+Time=0 | RST=1 | EN=0 | LOAD=0 | Count= 0 (0000) | TC=0
+Time=20000 | RST=0 | EN=0 | LOAD=0 | Count= 0 (0000) | TC=0
+PASS: Counter reset to 0
+
+[TEST 2] Enable Counting (0→5)
+Time=30000 | RST=0 | EN=1 | LOAD=0 | Count= 0 (0000) | TC=0
+Time=35000 | RST=0 | EN=1 | LOAD=0 | Count= 1 (0001) | TC=0
+Time=45000 | RST=0 | EN=1 | LOAD=0 | Count= 2 (0010) | TC=0
+Time=55000 | RST=0 | EN=1 | LOAD=0 | Count= 3 (0011) | TC=0
+Time=65000 | RST=0 | EN=1 | LOAD=0 | Count= 4 (0100) | TC=0
+Time=75000 | RST=0 | EN=1 | LOAD=0 | Count= 5 (0101) | TC=0
+PASS: Counter reached 5
+
+[TEST 3] Disable Test
+Time=76000 | RST=0 | EN=0 | LOAD=0 | Count= 5 (0101) | TC=0
+PASS: Counter held at 5
+
+[TEST 4] Load Value = 12
+Time=106000 | RST=0 | EN=0 | LOAD=1 | Count= 5 (0101) | TC=0
+Time=115000 | RST=0 | EN=0 | LOAD=1 | Count=12 (1100) | TC=0
+PASS: Counter loaded with 12
+
+[TEST 5] Terminal Count
+Time=116000 | RST=0 | EN=1 | LOAD=0 | Count=12 (1100) | TC=0
+Time=125000 | RST=0 | EN=1 | LOAD=0 | Count=13 (1101) | TC=0
+Time=135000 | RST=0 | EN=1 | LOAD=0 | Count=14 (1110) | TC=0
+Time=145000 | RST=0 | EN=1 | LOAD=0 | Count=15 (1111) | TC=1
+PASS: Terminal count reached
+
+[TEST 6] Rollover Test
+Time=155000 | RST=0 | EN=1 | LOAD=0 | Count= 0 (0000) | TC=0
+PASS: Counter rolled over to 0
+
+[TEST 7] Reset During Operation
+Time=165000 | RST=0 | EN=1 | LOAD=0 | Count= 1 (0001) | TC=0
+Time=175000 | RST=0 | EN=1 | LOAD=0 | Count= 2 (0010) | TC=0
+Time=185000 | RST=0 | EN=1 | LOAD=0 | Count= 3 (0011) | TC=0
+Time=195000 | RST=0 | EN=1 | LOAD=0 | Count= 4 (0100) | TC=0
+Time=205000 | RST=1 | EN=1 | LOAD=0 | Count= 0 (0000) | TC=0
+PASS: Reset works during counting
+Time=216000 | RST=0 | EN=1 | LOAD=0 | Count= 0 (0000) | TC=0
+Time=225000 | RST=0 | EN=1 | LOAD=0 | Count= 1 (0001) | TC=0
+Time=235000 | RST=0 | EN=1 | LOAD=0 | Count= 2 (0010) | TC=0
+Time=245000 | RST=0 | EN=1 | LOAD=0 | Count= 3 (0011) | TC=0
+Time=255000 | RST=0 | EN=1 | LOAD=0 | Count= 4 (0100) | TC=0
+Time=265000 | RST=0 | EN=1 | LOAD=0 | Count= 5 (0101) | TC=0
+
+========================================
+  TEST SUMMARY
+========================================
+  Total Tests: 7
+  Passed:      7
+  Failed:      0
+  STATUS: ALL TESTS PASSED
+========================================
+
+$finish called at time : 266 ns : File "C:/Users/sachi/Vivado/Practice/4-BIT COUNTER/4-BIT COUNTER.srcs/sim_1/new/tb_counter_4bit.v" Line 179
