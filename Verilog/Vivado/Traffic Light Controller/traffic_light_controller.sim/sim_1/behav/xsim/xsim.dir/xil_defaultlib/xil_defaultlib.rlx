@@ -1,0 +1,8 @@
+0.7
+2020.2
+May 22 2025
+00:13:55
+C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.sim/sim_1/behav/xsim/glbl.v,1741209010,verilog,,,,glbl,,,,,,,,
+C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sim_1/new/tb_traffic_controller.v,1768386075,verilog,,,,tb_traffic_controller,,,../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sources_1/new/tick_1s.v,1768381345,verilog,,C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sources_1/new/traffic_controller.v,,tick_1s,,,../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sources_1/new/traffic_controller.v,1768388534,verilog,,C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sim_1/new/tb_traffic_controller.v,,traffic_controller,,,../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,

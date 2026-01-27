@@ -1,0 +1,8 @@
+Time resolution is 1 ps
+Time=0 | State=xx | NS[R=x Y=x G=x] EW[R=x Y=x G=x]
+Time=5000 | State=00 | NS[R=0 Y=0 G=1] EW[R=1 Y=0 G=0]
+Time=125000 | State=01 | NS[R=0 Y=1 G=0] EW[R=1 Y=0 G=0]
+Time=225000 | State=10 | NS[R=1 Y=0 G=0] EW[R=0 Y=0 G=1]
+Time=325000 | State=11 | NS[R=1 Y=0 G=0] EW[R=0 Y=1 G=0]
+Time=425000 | State=00 | NS[R=0 Y=0 G=1] EW[R=1 Y=0 G=0]
+$finish called at time : 520 ns : File "C:/Users/sachi/Vivado/Practice/traffic_light_controller/traffic_light_controller.srcs/sim_1/new/tb_traffic_controller.v" Line 58
