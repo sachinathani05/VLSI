@@ -96,7 +96,8 @@ A critical constraint emerged from UMC 65nm design rules: the minimum diffusion 
 - Source of pMOS connected to global power net `vdd!`; source of nMOS to `gnd!`
 - Symbol generated from schematic and refined to standard inverter triangle-with-circle notation for use in hierarchical designs (tri-state inverter and DFF)
 
-📸 **Upload here:** `Part_A/Inverter/schematic/inv1_schematic.png`, `inv1_symbol.png`
+![Inverter Schematic](Part_A/Inverter/inv1_schematic.png)
+![Inverter Symbol](Part_A/Inverter/inv1_symbol.png)
 
 ### 1.3 Layout
 
@@ -108,7 +109,7 @@ The layout follows the UMC 65nm standard cell template:
 - **Dual contacts per source/drain diffusion** — satisfies UMC 65nm minimum contact yield rules
 - **Continuous substrate and n-well at cell boundaries** — enables seamless abutment with neighbouring cells; no redundant boundary shapes needed
 
-📸 **Upload here:** `Part_A/Inverter/layout/inv1_layout.png`
+![Inverter Layout](Part_A/Inverter/inv1_layout.png)
 
 ### 1.4 Verification: DRC / LVS / PEX
 
@@ -124,7 +125,9 @@ Layout vs. Schematic confirmed clean match:
 **PEX (Calibre xRC):**
 Parasitic extraction completed successfully, generating `av_extracted` view with full RC network. Captured parasitics include gate-drain overlap capacitance (Cgd), diffusion/junction capacitance at source/drain nodes, and M1 routing resistance and fringing capacitance — all invisible at schematic level.
 
-📸 **Upload here:** `Part_A/Inverter/verification/drc_result.png`, `lvs_result.png`, `pex_view.png`
+![DRC Result](Part_A/Inverter/drc_result.png)
+![LVS Result](Part_A/Inverter/lvs_result.png)
+![PEX View](Part_A/Inverter/pex_view.png)
 
 ### 1.5 Simulation Results
 
@@ -139,7 +142,9 @@ Parasitic extraction completed successfully, generating `av_extracted` view with
 
 **Why post-layout is slower and less efficient:** Post-layout parasitics add routing capacitance and resistance to the output node RC time constant. Each switching event must charge/discharge additional capacitance beyond what the schematic predicts. The energy increase (+42.6%) is disproportionately larger than the delay increase (+14.6%) because energy scales as CV², making it more sensitive to additional parasitic capacitance.
 
-📸 **Upload here:** `Part_A/Inverter/simulation/inv1_waveforms_pre.png`, `inv1_waveforms_post.png`, `inv1_iinteg.png`
+![Pre-Layout Waveforms](Part_A/Inverter/inv1_waveforms_pre.png)
+![Post-Layout Waveforms](Part_A/Inverter/inv1_waveforms_post.png)
+![Current Integral](Part_A/Inverter/inv1_iinteg.png)
 
 ---
 
@@ -178,7 +183,8 @@ The series enable transistors introduce additional resistance, degrading drive s
 - `e` and `ne` signals routed in M1 with adequate DRC spacing between the NMOS and PMOS series stacks
 - **Shared diffusion at series connection nodes** reduces internal parasitic capacitance between stacked transistors
 
-📸 **Upload here:** `Part_A/Tristate_Inverter/layout/tristate_layout.png`
+![Tristate Inverter Schematic](Part_A/Tristate_Inverter/tristate_schematic.png)
+![Tristate Inverter Layout](Part_A/Tristate_Inverter/tristate_layout.png)
 
 ### 2.4 Simulation Results
 
@@ -190,7 +196,9 @@ The series enable transistors introduce additional resistance, degrading drive s
 
 **Current spike characteristics:** The tri-state spike is broader than the inverter's due to series resistance and the larger internal node capacitance (longer RC time constant). The higher peak charge reflects doubled gate capacitances and larger short-circuit current through the wider transistors. A slight inflection is sometimes visible in the spike, indicating two-stage switching — enable transistor activates first, then the internal inverter drives the output. Post-layout spike is flatter and more spread, directly visualising the RC slowdown from extraction.
 
-📸 **Upload here:** `Part_A/Tristate_Inverter/simulation/tristate_waveforms.png`, `tristate_iinteg.png`
+![Tristate Pre-Layout Waveforms](Part_A/Tristate_Inverter/tristate_waveforms_pre.png)
+![Tristate Post-Layout Waveforms](Part_A/Tristate_Inverter/tristate_waveforms_post.png)
+![Tristate Current Integral](Part_A/Tristate_Inverter/tristate_iinteg.png)
 
 ---
 
@@ -234,7 +242,9 @@ All four sub-cells share the same 3.0µm PR boundary height. Abutting them horiz
 
 **Final dimensions:** 3.0µm height × approximately 4× inverter width
 
-📸 **Upload here:** `Part_A/D_Flip_Flop/layout/dff_layout.png`
+![DFF Schematic](Part_A/D_Flip_Flop/dff_schematic.png)
+![DFF Layout](Part_A/D_Flip_Flop/dff_layout.png)
+![DFF Layout Zoomed](Part_A/D_Flip_Flop/dff_layout_Zoomed.png)
 
 ### 3.3 Simulation Results
 
@@ -248,7 +258,9 @@ All four sub-cells share the same 3.0µm PR boundary height. Abutting them horiz
 
 Most DFF energy is **clock-related overhead** consumed every cycle regardless of whether data D actually changes. This directly motivates **clock gating** as the primary power reduction technique in flip-flop-heavy datapaths.
 
-📸 **Upload here:** `Part_A/D_Flip_Flop/simulation/dff_waveforms.png`, `dff_iinteg.png`
+![DFF Pre-Layout Waveforms](Part_A/D_Flip_Flop/dff_waveform_pre.png)
+![DFF Post-Layout Waveforms](Part_A/D_Flip_Flop/dff_waveform_post.png)
+![DFF Current Integral](Part_A/D_Flip_Flop/dff_iinteg.png)
 
 ---
 
@@ -289,7 +301,10 @@ Four testbenches, each with an `inv1` driver loaded by 0, 1, 2, or 4 parallel `i
 
 **Simulation conditions:** VDD = 1.0V, T = 27°C, 10ps rise/fall vpulse, delays at VDD/2 crossing.
 
-📸 **Upload here:** `Part_B/Experiment_1_Fanout/testbenches/fo0_tb.png`, `fo4_tb.png`, `simulation/fanout_waveforms.png`
+![FO0 Testbench](Part_B/Experiment_1_Fanout/fo0_tb.png)
+![FO2 Testbench](Part_B/Experiment_1_Fanout/fo2_tb.png)
+![FO4 Testbench](Part_B/Experiment_1_Fanout/fo4_tb.png)
+![Fanout Waveforms](Part_B/Experiment_1_Fanout/fanout_waveforms_fo0.png)
 
 ### Results
 
@@ -328,7 +343,10 @@ Sweep shows: 19.17 ps at 0.5fF, 22.15 ps at 1.0fF
 C_in = 0.5 + [(20.25 − 19.17) / (22.15 − 19.17)] × 0.5 = 0.681 fF
 ```
 
-📸 **Upload here:** `Part_B/Experiment_1_Fanout/cin_sweep/cin_sweep_schematic.png`, `cin_sweep_extracted.png`, `plots/delay_vs_fanout.png`, `plots/cin_determination.png`
+![Cin Sweep Schematic](Part_B/Experiment_1_Fanout/cin_sweep_schematic.png)
+![Cin Sweep Extracted](Part_B/Experiment_1_Fanout/cin_sweep_extracted.png)
+![Delay vs Fanout](Part_B/Experiment_1_Fanout/delay_vs_fanout.png)
+![Cin Determination](Part_B/Experiment_1_Fanout/cin_determination.png)
 
 ### Why LE Fails at 65nm
 
@@ -380,7 +398,8 @@ Two physical layouts of the same schematic — two cascaded `inv1` instances con
 
 The schematic is **identical for both layouts** — all delay difference is purely from physical wire parasitics captured by Calibre PEX.
 
-📸 **Upload here:** `Part_B/Experiment_2_Wire_Delay/layouts/short_wire_layout.png`, `long_wire_layout.png`
+![Short Wire Layout](Part_B/Experiment_2_Wire_Delay/short_wire_layout.png)
+![Long Wire Layout](Part_B/Experiment_2_Wire_Delay/long_wire_layout.png)
 
 ### Simulation Results
 
@@ -394,7 +413,8 @@ Calibre PEX applied to both layouts. VDD = 1.0V, T = 27°C.
 | Long wire (100µm) | Extracted | 98.70 | 114.0 | 106.35 |
 | **Wire-added delay (Long − Short)** | — | 56.32 | 66.92 | **61.62** |
 
-📸 **Upload here:** `Part_B/Experiment_2_Wire_Delay/simulation/short_wire_waveforms.png`, `long_wire_waveforms.png`
+![Short Wire Waveforms](Part_B/Experiment_2_Wire_Delay/short_wire_waveforms.png)
+![Long Wire Waveforms](Part_B/Experiment_2_Wire_Delay/long_wire_waveforms.png)
 
 ### Equivalent Capacitance Calculation
 
@@ -432,7 +452,8 @@ Fall: tpHL = 98.70ps → between 13fF (96.11ps) and 14fF (100.5ps)
 
 > **Physical validation:** M1 capacitance density at 65nm is typically 0.1–0.2 fF/µm for minimum-width routing. The measured 0.113 fF/µm is physically consistent — confirming Calibre PEX extraction accuracy.
 
-📸 **Upload here:** `Part_B/Experiment_2_Wire_Delay/cload_sweep/cload_sweep_table.png`, `plots/wire_delay_comparison.png`
+![Cload Sweep Table](Part_B/Experiment_2_Wire_Delay/cload_sweep_table.png)
+![Wire Delay Comparison](Part_B/Experiment_2_Wire_Delay/wire_delay_comparison.png)
 
 ### Critical Wire Length
 
@@ -472,7 +493,9 @@ A chain of **48 cascaded minimum-size `inv1` inverters** sweeps VDD from 0.2V to
 - 48 stages amplify small per-gate differences, improving measurement accuracy at near-threshold VDD
 - **Energy measured as:** `E = VDD × ∫|I_vdd(t)| dt` with integration window = tp at each VDD (critical: a fixed window would overestimate energy at low VDD where delays are much longer)
 
-📸 **Upload here:** `Part_B/Experiment_3_Energy_VDD/testbench/inv_chain_schematic.png`, `inv_chain_tb.png`
+![Inverter Chain Schematic](Part_B/Experiment_3_Energy_VDD/inv_chain_schematic.png)
+![Inverter Chain Testbench](Part_B/Experiment_3_Energy_VDD/inv_chain_tb.png)
+![Inverter Chain Waveform](Part_B/Experiment_3_Energy_VDD/inv_chain_waveform.png)
 
 ### Delay vs. VDD Results
 
@@ -500,7 +523,7 @@ A chain of **48 cascaded minimum-size `inv1` inverters** sweeps VDD from 0.2V to
 
 **Rise/fall asymmetry:** Rise delay (tpLH) consistently exceeds fall delay (tpHL). Despite the 1.6× width compensation, PMOS hole mobility µp ≈ 0.6µn — and velocity saturation disproportionately limits PMOS at short channel lengths. The asymmetry grows at higher VDD as NMOS benefits more from increased overdrive.
 
-📸 **Upload here:** `Part_B/Experiment_3_Energy_VDD/plots/delay_vs_vdd_merged.png`
+![Delay vs VDD](Part_B/Experiment_3_Energy_VDD/delay_vs_vdd_merged.png)
 
 ### Energy vs. VDD Results
 
@@ -530,7 +553,7 @@ The U-shaped curve arises from two competing energy components:
 
 **Ceff = 2E/VDD² trend:** Decreases from 5.27 fF (0.6V) to 1.18 fF (2.0V). At low VDD, both NMOS and PMOS remain partially ON longer during transitions, adding short-circuit energy beyond the ideal C×VDD² term. Fast transitions at high VDD minimise this overlap. This means that `C×VDD²` alone underestimates total switching energy at low VDD.
 
-📸 **Upload here:** `Part_B/Experiment_3_Energy_VDD/plots/energy_vs_vdd.png`
+![Energy vs VDD](Part_B/Experiment_3_Energy_VDD/energy_vs_vdd.png)
 
 ### Energy-Delay Product (EDP)
 
