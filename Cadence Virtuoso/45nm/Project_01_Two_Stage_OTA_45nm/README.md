@@ -52,8 +52,8 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 | `fz = gm6 / (2π·Cc)` | RHP zero from Cc alone — removed by Rz |
 | `Rz_ideal = 1/gm6` | Nulling resistor value to push zero to infinity |
 
-![Schematic](images/schematic.png)
-*Full OTA schematic with device labels, net names (NET_A, NET_B, TAIL, BIAS, VOUT), and Rz-Cc feedback path highlighted*
+![OTA Schematic](OTA_Scehmatic.jpg)
+*Full OTA schematic with device labels, net names (NET_A, NET_B, TAIL, BIAS, VOUT), and Rz-Cc feedback path*
 
 ---
 
@@ -82,6 +82,9 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 
 **Testbench:** Unity-gain buffer configuration (VOUT → VIN+, VIN− = 0.6V DC, VDD = 1.2V).  
 **Purpose:** Verify every transistor is in the correct operating region before running any AC or transient simulation. A device in triode has significantly lower output impedance and will degrade gain.
+
+![AC & DC Testbench Schematic](OTA_AC&DC_TB_Scehmatic.jpg)
+*AC and DC testbench — unity-gain buffer with iprobe inserted in feedback wire for STB analysis*
 
 ### 3.1 Device Operating Points (TT, 27°C)
 
@@ -117,9 +120,6 @@ Vdsat(M5) = 116 mV  →  Triode
 ```
 
 Accepted because: triode M5 only degrades CMRR (low tail impedance = poor common-mode rejection). All signal-path devices remain in saturation. Measured CMRR = 76.4 dB still passes the 60 dB target. Attempts to fix M5 by widening it or increasing IREF all pushed M1/M2 into subthreshold before M5 entered saturation — an unavoidable headroom conflict at 1.2V/45nm.
-
-![DC Operating Point](images/dc_operating_point.png)
-*DC operating point annotation: Vds, Vgs, Id values on schematic nodes. M5 triode region highlighted.*
 
 ---
 
@@ -173,7 +173,7 @@ M6 at W=250µm has large Cgd6. Miller multiplication at NET_B effectively increa
 | 2 pF | 600 µm | 60 MHz | 67.6° | Near target; GBW still below 100 MHz |
 | **1.35 pF** | **250 µm** | **57.5 MHz** | **60.9°** | **Final — best achievable tradeoff** |
 
-![Bode Plot](images/bode_plot.png)
+![Bode Plot - AC Loop Gain](OTA_AC.jpg)
 *Loop gain magnitude (dB) and phase (°) vs. frequency. DC gain 75.6 dB, GBW crossing at 57.5 MHz, phase at GBW = −119.1°, PM = 60.9°*
 
 ---
@@ -229,14 +229,11 @@ The Rz-Cc network creates a LHP zero to cancel the Miller pole (p1). Perfect can
 
 This is not a design error but a known tradeoff: exact Rz=1/gm6 cancellation would improve falling settling but gm6 varies with bias and corner, so a fixed Rz can never perfectly cancel at all conditions.
 
-![Transient Full](images/transient_full.png)
-*Full 1 µs transient — VOUT (green) and VIN (red). Fast rising edges, slow exponential falling tails visible.*
+![Transient Full Waveform](Vpulse_full_waveform.jpg)
+*Full transient — VOUT (green) and VIN (red). Fast rising edges, slow exponential falling tails visible.*
 
-![Transient Rising Zoom](images/transient_rising_zoom.png)
-*Zoomed rising edge (0–100 ns): ~3.3% overshoot to 0.93V, settling to 0.9V by 18.6 ns.*
-
-![Transient Falling Zoom](images/transient_falling_zoom.png)
-*Zoomed falling edge settling (200 ns–600 ns): fast initial drop followed by slow doublet tail settling by 223 ns.*
+![Transient One Period Zoom](oneperiod_Vpulse.jpg)
+*Single period zoom — rising edge overshoot (~3.3%), fast settling on rising side, slow doublet tail on falling side.*
 
 ---
 
@@ -291,7 +288,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 | Baseband (WiFi/BT) | 1 MHz – 50 MHz | ✅ Near/above flicker corner — acceptable |
 | RF receiver (2.4 GHz) | 2.4 GHz | ✅ Far above flicker — thermal floor only at 9.5 nV/√Hz |
 
-![Noise Plot](images/noise_plot.png)
+![Noise Waveform](OTA_Noise_Waveform.jpg)
 *Log-log input-referred noise: 1/f slope below 1.4 MHz, flat thermal floor at 9.5 nV/√Hz, noise gain peaking above 20 MHz.*
 
 ---
@@ -320,7 +317,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 
 Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-unity low-frequency Acm is caused by M5 in triode — a triode tail current source has low output impedance and cannot suppress common-mode inputs effectively. CMRR still passes because differential gain is high enough. Above ~200 kHz, Acm rolls off and CMRR improves significantly (>110 dB at 10 MHz).
 
-![CMRR Plot](images/cmrr_plot.png)
+![CMRR Waveform](CMRR_waveform.jpg)
 *Acm (dB) vs. frequency: flat at −0.807 dB from DC to 100 kHz, rolling off to −35 dB at 10 MHz.*
 
 ---
@@ -351,6 +348,9 @@ Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-
 ### 8.3 Why PSRR >> CMRR
 
 CMRR=76.4 dB, PSRR=164.4 dB — an 88 dB difference. VDD perturbation must couple through transistors to reach VOUT, and the feedback loop actively suppresses any supply-induced output error. Loop gain = 75.6 dB ≈ 6000× suppresses supply disturbances multiplicatively. Common-mode signals, by contrast, enter directly through input terminals and bypass the full loop gain benefit.
+
+![PSRR Waveform](PSRR_Waveform.jpg)
+*A_supply (dB20) vs. frequency: −88.79 dB at 1 kHz, giving PSRR = 164.4 dB.*
 
 ---
 
@@ -405,8 +405,17 @@ Physical reason: PMOS is hole-based transport. Hole mobility degrades more steep
 
 **Proposed fix:** Increase Cc from 1.35 pF → 1.55 pF. This lowers GBW at all corners by ×(1.35/1.55)=0.87 without changing p2. FF/27°C GBW drops from 62 → 54 MHz, restoring PM above 60°. Trade-off: TT/27°C GBW drops from 57 → ~50 MHz.
 
-![Corner Sweep Results](images/corner_sweep_table.png)
-*ADE XL results spreadsheet: all 9 corner/temperature points with GBW and PM values colour-coded pass/fail.*
+![Loop Gain Corner Waveform - TT](LoopGain_Corner_Waveform.jpg)
+*Loop gain Bode plot — corner sweep overlay. Gain and phase vs. frequency across TT/SS/FF corners.*
+
+![Loop Gain Corner Waveform - SS/FF comparison](LoopGain_Corner_Waveform_2.jpg)
+*Corner sweep — SS and FF phase margin comparison. FF corner phase margin degradation visible at GBW crossing.*
+
+![Loop Gain Corner Waveform - Temperature sweep](LoopGain_Corner_Waveform_3.jpg)
+*Corner sweep across temperatures. GBW range: 25.5 MHz (SS/125°C) to 92.5 MHz (FF/−40°C).*
+
+![Corner Case Results Table](Corner_Case_Result.png)
+*ADE XL results table: all 9 corner/temperature simulation points with GBW and phase margin values.*
 
 ---
 
@@ -522,8 +531,7 @@ Two separate guard rings required:
 
 NMOS and PMOS guard rings must be physically separate — they must not share contacts.
 
-![Layout](images/layout.png)
-*Virtuoso layout — M1/M2 ABBA common-centroid differential pair, M3/M4 PMOS load, M5 tail, M6/M7 second stage, M8 bias, nmoscap1v Cc.*
+> Layout screenshot to be added after DRC/LVS signoff.
 
 ---
 
@@ -609,5 +617,5 @@ Running Cadence IC615 on CentOS 6 32-bit required several non-obvious fixes:
 
 | File | Contents |
 |---|---|
-| [`docs/OTA_Simulation_Report_AC_DC.docx`](docs/OTA_Simulation_Report_AC_DC.docx) | Formal simulation report — DC operating point, AC/STB results, debug history |
-| [`docs/OTA_Simulation_Study_Guide_v2.docx`](docs/OTA_Simulation_Study_Guide_v2.docx) | Complete study guide — all simulations, equations, interview prep, environment notes |
+| [`OTA_Simulation_Report_AC_DC.docx`](OTA_Simulation_Report_AC_DC.docx) | Formal simulation report — DC operating point, AC/STB results, debug history |
+| [`OTA_Simulation_Study_Guide_v2.docx`](OTA_Simulation_Study_Guide_v2.docx) | Complete study guide — all simulations, equations, interview prep, environment notes |
