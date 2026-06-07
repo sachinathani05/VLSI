@@ -1,0 +1,98 @@
+# ── Xilinx Vivado build artifacts ──────────────────────────────
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.srcs/utils_1/
+*.jou
+*.pb
+*.str
+*.wdf
+*.lpr
+*.wpc
+ISEWrap.js
+ISEWrap.sh
+runme.bat
+runme.sh
+rundef.js
+gen_run.xml
+htr.txt
+dfx_runtime.txt
+incr_synth_reason.pb
+xelab.pb
+xvlog.pb
+xvlog.log
+xelab.log
+*.dcp
+*.vds
+*.wcfg
+
+# ── iVerilog compiled outputs ───────────────────────────────────
+a.out
+*.out
+*_sim
+*.vcd
+
+# ── ModelSim / QuestaSim ───────────────────────────────────────
+work/
+transcript
+vsim.wlf
+*.wlf
+
+# ── Cadence Virtuoso ───────────────────────────────────────────
+*.cdslck
+.cdslck
+CDS.log
+*.log.cdslck
+cds.lib
+hdl.var
+simulation/
+*.spectre*
+.staterc*
+
+# ── OpenLane / SKY130 build outputs ────────────────────────────
+runs/
+*.gds
+*.lef
+*.lib
+*.def
+*.odb
+*.rpt
+spef/
+logs/
+
+# ── Compiled binaries & objects ────────────────────────────────
+*.exe
+*.o
+*.obj
+*.win64.obj
+*.elf
+
+# ── Simulation databases ────────────────────────────────────────
+*.sdb
+*.rlx
+*.dbg
+*.rtti
+*.svtype
+*.type
+*.xdbg
+*.mem
+*.reloc
+*.ini
+xsim.dir/
+
+# ── LTSpice ────────────────────────────────────────────────────
+*.raw
+*.op.raw
+*.bak
+*.net
+
+# ── General ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+*.swp
+*.swo
+~$*
