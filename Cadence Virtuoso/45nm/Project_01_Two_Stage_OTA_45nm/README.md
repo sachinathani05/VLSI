@@ -1,8 +1,12 @@
 # Two-Stage Miller-Compensated OTA — GPDK045 45nm
 
-**Tool:** Cadence Virtuoso IC615 · Spectre MMSIM121 · ADE L / ADE XL · PVS (DRC/LVS) · QRC (PEX)  
+**Tool:** Cadence Virtuoso IC615 · Spectre MMSIM121 · ADE L / ADE XL · Assura DRC / LVS / RCX  
 **PDK:** GPDK045 v5.0 · 45nm · VDD = 1.2V · CL = 10pF  
 **OS:** CentOS 6 32-bit Linux · VMware Workstation Pro
+
+---
+
+> **Project narrative:** After completing schematic-level verification (75.6 dB gain, 57.5 MHz GBW, 60.9° phase margin), this OTA was carried through full physical signoff — layout, DRC, LVS, and PEX-based post-layout verification — in GPDK045 45nm. LVS debugging uncovered a systematic pattern across five separate nets: gate poly extensions that were never tied into their intended Metal1 buses, resolved with a consistent Contact-plus-Metal1 fix. A more subtle finding followed: even after LVS reported the input pins fully matched, RCX's stricter geometric extraction showed the input was still electrically isolated from the differential pair's gate — a genuine LVS-vs-RCX tolerance discrepancy that was traced and resolved. Post-layout bias verification then surfaced three further issues in sequence: a tail-node short caused by a shared source strap also carrying a substrate tap; a missing bias reference current in the extracted testbench (ideal current sources have no physical layout representation); and, after correcting a misread BSIM4 operating-point field that had been masking the true picture, a deep dive into bistable DC convergence that traced a persistent operating-point collapse to its real structural cause — the second-stage output transistor's 25 fingers were wired as a series chain rather than the intended parallel multi-finger device, severely undercutting its drive strength. This document tracks every discrepancy between simulator-reported connectivity, the actual extracted netlist, and the physical diffusion layout, rather than stopping at the first plausible-looking fix.
 
 ---
 
@@ -18,10 +22,15 @@
 8. [PSRR Simulation](#8-psrr-simulation)
 9. [Corner Sweep — ADE XL](#9-corner-sweep--ade-xl)
 10. [Monte Carlo & Offset Budget](#10-monte-carlo--offset-budget)
-11. [Layout](#11-layout)
-12. [Results Summary](#12-results-summary)
-13. [Design Limitations & Engineering Discussion](#13-design-limitations--engineering-discussion)
-14. [Environment & 32-bit Workarounds](#14-environment--32-bit-workarounds)
+11. [Layout Implementation](#11-layout-implementation)
+12. [LVS Signoff & Debugging](#12-lvs-signoff--debugging)
+13. [PEX / Post-Layout Verification](#13-pex--post-layout-verification)
+14. [Pre-Layout vs Post-Layout Results](#14-pre-layout-vs-post-layout-results)
+15. [Known Limitations & Documented Waivers — Physical Design](#15-known-limitations--documented-waivers--physical-design)
+16. [Results Summary](#16-results-summary)
+17. [Engineering Discussion — Design Limitations](#17-engineering-discussion--design-limitations)
+18. [Environment & 32-bit Workarounds](#18-environment--32-bit-workarounds)
+19. [Next Steps](#19-next-steps)
 
 ---
 
@@ -52,7 +61,7 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 | `fz = gm6 / (2π·Cc)` | RHP zero from Cc alone — removed by Rz |
 | `Rz_ideal = 1/gm6` | Nulling resistor value to push zero to infinity |
 
-![OTA Schematic](Images/OTA_Scehmatic.jpg)
+![OTA Schematic](Image/OTA_Scehmatic.jpg)
 *Full OTA schematic with device labels, net names (NET_A, NET_B, TAIL, BIAS, VOUT), and Rz-Cc feedback path*
 
 ---
@@ -83,7 +92,7 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 **Testbench:** Unity-gain buffer configuration (VOUT → VIN+, VIN− = 0.6V DC, VDD = 1.2V).  
 **Purpose:** Verify every transistor is in the correct operating region before running any AC or transient simulation. A device in triode has significantly lower output impedance and will degrade gain.
 
-![AC & DC Testbench Schematic](Images/OTA_AC%26DC_TB_Scehmatic.jpg)
+![AC & DC Testbench Schematic](Image/OTA_AC%26DC_TB_Scehmatic.jpg)
 *AC and DC testbench — unity-gain buffer with iprobe inserted in feedback wire for STB analysis*
 
 ### 3.1 Device Operating Points (TT, 27°C)
@@ -173,7 +182,7 @@ M6 at W=250µm has large Cgd6. Miller multiplication at NET_B effectively increa
 | 2 pF | 600 µm | 60 MHz | 67.6° | Near target; GBW still below 100 MHz |
 | **1.35 pF** | **250 µm** | **57.5 MHz** | **60.9°** | **Final — best achievable tradeoff** |
 
-![Bode Plot - AC Loop Gain](Images/OTA_AC.jpg)
+![Bode Plot - AC Loop Gain](Image/OTA_AC.jpg)
 *Loop gain magnitude (dB) and phase (°) vs. frequency. DC gain 75.6 dB, GBW crossing at 57.5 MHz, phase at GBW = −119.1°, PM = 60.9°*
 
 ---
@@ -229,10 +238,10 @@ The Rz-Cc network creates a LHP zero to cancel the Miller pole (p1). Perfect can
 
 This is not a design error but a known tradeoff: exact Rz=1/gm6 cancellation would improve falling settling but gm6 varies with bias and corner, so a fixed Rz can never perfectly cancel at all conditions.
 
-![Transient Full Waveform](Images/Vpulse_full_waveform.jpg)
+![Transient Full Waveform](Image/Vpulse_full_waveform.jpg)
 *Full transient — VOUT (green) and VIN (red). Fast rising edges, slow exponential falling tails visible.*
 
-![Transient One Period Zoom](Images/oneperiod_Vpulse.jpg)
+![Transient One Period Zoom](Image/oneperiod_Vpulse.jpg)
 *Single period zoom — rising edge overshoot (~3.3%), fast settling on rising side, slow doublet tail on falling side.*
 
 ---
@@ -288,7 +297,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 | Baseband (WiFi/BT) | 1 MHz – 50 MHz | ✅ Near/above flicker corner — acceptable |
 | RF receiver (2.4 GHz) | 2.4 GHz | ✅ Far above flicker — thermal floor only at 9.5 nV/√Hz |
 
-![Noise Waveform](Images/OTA_Noise_Waveform.jpg)
+![Noise Waveform](Image/OTA_Noise_Waveform.jpg)
 *Log-log input-referred noise: 1/f slope below 1.4 MHz, flat thermal floor at 9.5 nV/√Hz, noise gain peaking above 20 MHz.*
 
 ---
@@ -317,7 +326,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 
 Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-unity low-frequency Acm is caused by M5 in triode — a triode tail current source has low output impedance and cannot suppress common-mode inputs effectively. CMRR still passes because differential gain is high enough. Above ~200 kHz, Acm rolls off and CMRR improves significantly (>110 dB at 10 MHz).
 
-![CMRR Waveform](Images/CMRR_waveform.jpg)
+![CMRR Waveform](Image/CMRR_waveform.jpg)
 *Acm (dB) vs. frequency: flat at −0.807 dB from DC to 100 kHz, rolling off to −35 dB at 10 MHz.*
 
 ---
@@ -349,7 +358,7 @@ Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-
 
 CMRR=76.4 dB, PSRR=164.4 dB — an 88 dB difference. VDD perturbation must couple through transistors to reach VOUT, and the feedback loop actively suppresses any supply-induced output error. Loop gain = 75.6 dB ≈ 6000× suppresses supply disturbances multiplicatively. Common-mode signals, by contrast, enter directly through input terminals and bypass the full loop gain benefit.
 
-![PSRR Waveform](Images/PSRR_Waveform.jpg)
+![PSRR Waveform](Image/PSRR_Waveform.jpg)
 *A_supply (dB20) vs. frequency: −88.79 dB at 1 kHz, giving PSRR = 164.4 dB.*
 
 ---
@@ -405,16 +414,16 @@ Physical reason: PMOS is hole-based transport. Hole mobility degrades more steep
 
 **Proposed fix:** Increase Cc from 1.35 pF → 1.55 pF. This lowers GBW at all corners by ×(1.35/1.55)=0.87 without changing p2. FF/27°C GBW drops from 62 → 54 MHz, restoring PM above 60°. Trade-off: TT/27°C GBW drops from 57 → ~50 MHz.
 
-![Loop Gain Corner Waveform - TT](Images/LoopGain_Corner_Waveform.jpg)
+![Loop Gain Corner Waveform - TT](Image/LoopGain_Corner_Waveform.jpg)
 *Loop gain Bode plot — corner sweep overlay. Gain and phase vs. frequency across TT/SS/FF corners.*
 
-![Loop Gain Corner Waveform - SS/FF comparison](Images/LoopGain_Corner_Waveform_2.jpg)
+![Loop Gain Corner Waveform - SS/FF comparison](Image/LoopGain_Corner_Waveform_2.jpg)
 *Corner sweep — SS and FF phase margin comparison. FF corner phase margin degradation visible at GBW crossing.*
 
-![Loop Gain Corner Waveform - Temperature sweep](Images/LoopGain_Corner_Waveform_3.jpg)
+![Loop Gain Corner Waveform - Temperature sweep](Image/LoopGain_Corner_Waveform_3.jpg)
 *Corner sweep across temperatures. GBW range: 25.5 MHz (SS/125°C) to 92.5 MHz (FF/−40°C).*
 
-![Corner Case Results Table](Images/Corner_Case_Result.png)
+![Corner Case Results Table](Image/Corner_Case_Result.png)
 *ADE XL results table: all 9 corner/temperature simulation points with GBW and phase margin values.*
 
 ---
@@ -469,7 +478,7 @@ Working backwards: need σ(Vos) < 1.67 mV, which requires M1/M2 W ≈ 100 µm (2
 
 ---
 
-## 11. Layout
+## 11. Layout Implementation
 
 ### 11.1 Layout Status
 
@@ -478,15 +487,18 @@ Working backwards: need σ(Vos) < 1.67 mV, which requires M1/M2 W ≈ 100 µm (2
 | M1/M2 differential pair (ABBA common-centroid) | ✅ Placed |
 | M3/M4 PMOS active load | ✅ Placed |
 | M5 tail current source | ✅ Placed |
-| M6 second-stage amplifier | ✅ Placed |
-| M7 second-stage load | ✅ Placed |
+| M6 second-stage amplifier (25-finger SerMos25 Pcell) | ✅ Placed — wiring defect found, see §13.5 |
+| M7 second-stage load (5-finger SerMos5 Pcell) | ✅ Placed |
 | M8 bias reference | ✅ Placed |
-| Cc (nmoscap1v) routing | 🔄 In progress |
-| Rz routing | 🔄 In progress |
-| DRC clean (PVS pvlDRC.rul) | ⏳ Pending |
-| LVS clean (PVS pvlLVS.rul) | ⏳ Pending |
-| PEX (QRC typical corner) | ⏳ Pending |
-| Post-PEX AC comparison | ⏳ Pending |
+| Cc (nmoscap1v) | ✅ Placed and routed |
+| Rz (ressppoly) | ✅ Placed and routed |
+| DRC (Assura) | ✅ Clean — 0 violations |
+| LVS (Assura) | ✅ Matched — 2 documented waivers, see §15 |
+| PEX (Assura RCX) | ✅ Extracted — Cc/Rz model substitution required, see §13.7 |
+| Post-PEX AC/STB | ⚠️ Bias chain verified correct in isolation; closed-loop operating point not yet settling at intended mid-rail — root-caused to §13.5, fix pending |
+
+![Full Chip Layout](Image/OTA_Full_Layout.jpg)
+*Top-level Virtuoso layout — ABBA common-centroid differential pair, M3/M4 load, M5 tail, M6/M7 second stage, M8 bias, Cc/Rz, NMOS/PMOS guard rings.*
 
 ### 11.2 ABBA Common-Centroid for M1/M2
 
@@ -531,11 +543,213 @@ Two separate guard rings required:
 
 NMOS and PMOS guard rings must be physically separate — they must not share contacts.
 
-> Layout screenshot to be added after DRC/LVS signoff.
+---
+
+## 12. LVS Signoff & Debugging
+
+### 12.1 Starting State
+
+The layout was DRC-clean at a basic level, but LVS showed **42 unmatched internal nets and 7 unmatched device instances**, dominated by:
+
+- VIN+ and VIN− pins sitting on the wrong physical net (a PMOS drain / ABBA source-drain strap) instead of on M1/M2's actual gate poly
+- M3/M4 gates not tied together (net18 mismatch)
+- M6 (25-finger SerMos25 Pcell) and M7 (5-finger SerMos5 Pcell) gate fingers not tied into their respective bias buses (net25, net13)
+- M5 (intended as a 4µ tail-bias device) appearing only as two unconnected 2µ ABBA dummy fingers
+- M8 (diode-connected bias reference) gate and drain not tied into net13
+
+A prior post-PEX simulation attempt had shown zero loop gain across all frequencies, traced to the VIN+ pin issue above.
+
+### 12.2 Root Cause Pattern and Fix
+
+Across nearly every unmatched net, the root cause was the same: a gate (or shared bus) existed in the layout but had no Metal1+Contact path tying it into the intended net. GPDK045's MOS Pcells generate gate poly with a poly extension/tab beyond the active (Oxide) region specifically so an external contact can be added — these had simply never been wired up for several nets.
+
+**Repeated fix pattern:**
+
+1. Cross-probe the problem net in the Assura LVS results (RVE) to find its physical location
+2. Identify the gate poly's extension/tab beyond the Oxide boundary
+3. Extend a small Metal1 patch over this poly tab
+4. Place a Cont (contact) on the poly tab, clear of the Oxide/active edge — spacing matters, see §12.3
+5. Connect this Metal1 to the rest of the intended bus (e.g. the net13 strap, or the VIN+ gate strap)
+
+| Net | Devices Tied In | Result |
+|---|---|---|
+| VIN+ | M1's 2 gate fingers | Fully matched |
+| VIN− | M2's 2 gate fingers | Fully matched |
+| net18 | M3/M4 gates | Fully matched |
+| net25 | M6, all 25 gate fingers | Fully matched |
+| net13 | M7 (5 fingers), M8 gate | Fully matched |
+
+This single technique took unmatched internal nets from 42 down to single digits.
+
+![VIN+/VIN- Gate Strap Fix](Image/LVS_VINplus_GateStrap_Fix.jpg)
+*ABBA row showing the Metal1+Cont gate-strap connections added for VIN+/VIN− on M1/M2's gate fingers.*
+
+### 12.3 New DRC Violations From the Added Contacts
+
+Adding the Cont+Metal1 connections above surfaced two new DRC violations:
+
+| Rule | Description | Cause |
+|---|---|---|
+| CONT.SE.3 | Minimum gate Contact-on-Active-Area spacing ≥ 0.06 µm | Contact placed too close to / overlapping the gate's active (channel) region |
+| METAL1.E.2 | 0.03 ≥ 0.03 µm (marginal) | Metal1 not fully enclosing the new Cont on two opposite sides |
+
+**Fix:** Moved each affected contact further from the Oxide/Active edge, fully onto the poly extension, with margin beyond the 0.06 µm minimum. Where geometry was tight, used Virtuoso's "create via" assisted placement (auto-generates a correctly sized and spaced Cont) rather than manually drawn rectangles. DRC went clean (0 violations) at these locations afterward.
+
+> The DRC fix here and the VIN+ extraction discrepancy below (§12.4) happened close together in time but were tracked down to be **independent issues** — fixing DRC did not, by itself, fix the deeper extraction-level connectivity gap.
+
+### 12.4 The VIN+_avConflict Discrepancy — LVS vs RCX Extraction Mismatch
+
+After all §12.2 fixes, LVS reported VIN+/VIN− as **fully matched**. However, every RCX (parasitic) extraction — repeated across multiple fresh runs with new view names to rule out caching — consistently showed: the bare VIN+ port connected to nothing but a 0.87 fF parasitic capacitor (effectively floating), and a separate net, **VIN+_avConflict**, carrying the real mesh of resistors/capacitors and touching the actual transistor gates.
+
+This meant the testbench's stimulus, applied at the VIN+ port, never reached M1's gate in the extracted (post-layout) netlist — even though LVS considered the design correctly matched. This is a real, reproducible discrepancy between LVS's topological/pattern-based net matching and RCX's strict geometric extraction: **LVS can be satisfied by connectivity that doesn't form a true, continuous, fully merged conductor.**
+
+**What fixed it:** Two changes were made close together, and the very next RCX extraction came back clean (no more `_avConflict` split, VIN+ properly meshed and reaching M1's gate directly):
+
+- Changed the VIN+/VIN− pin shapes' layer purpose from plain "drawing" to the proper "Metal1 pin" purpose
+- Added a small (~0.01 µm) additional Metal1 overlap at the VIN+ pin-to-gate-strap junction
+
+It was not conclusively isolated which of these two changes was the deciding factor, but the combination resolved it completely and consistently across that and subsequent extractions.
+
+> **Lesson for future debugging:** When LVS says "matched" but RCX/post-layout simulation tells a different story, don't trust LVS's report as proof of true geometric continuity. Cross-check by grepping the actual extracted netlist for the port name directly, and look for `_avConflict`-suffixed nets — Assura appends this suffix specifically when it finds two competing definitions for the same net name during flattening.
 
 ---
 
-## 12. Results Summary
+## 13. PEX / Post-Layout Verification
+
+### 13.1 Tail-Node Short to VSS (net21 = VSS Bug)
+
+With VIN+/VIN− finally working, the extracted netlist showed **net21** (the TAIL node — M1/M2's shared source, M5's drain) **completely absent**. M1, M2, and M5 all showed their source/drain terminals tied directly to VSS instead of to a distinct net21.
+
+**Root cause:** The ABBA row's 6 NMOS fingers had all 6 sources tied onto one single shared strap, and this same strap carried a substrate Ptap connecting straight to VSS. A strap that needs to be both "the floating TAIL node" and "tied to VSS" is a direct contradiction — the entire strap collapses to VSS.
+
+**Fix:**
+
+| Step | Action |
+|---|---|
+| 1 | Removed the original Ptap from the shared strap (initially broke a LATCHUP DRC rule, since that tap also satisfied a proximity requirement) |
+| 2 | Re-added a Ptap using the proven recipe — Oxide 0.2µ×0.2µ, Pimp 0.22µ×0.22µ, Cont 0.06µ×0.06µ, Metal1 0.18µ×0.18µ, all concentric — with its own independent Metal1 wire to VSS, not touching the TAIL strap |
+| 3 | Physically separated the TAIL strap (M1.source + M2.source + M5.drain) from any VSS-tied metal |
+| 4 | Re-ran DRC (clean), LVS, and RCX. The fresh extraction showed net21 as its own properly meshed net for the first time |
+
+### 13.2 Missing Bias Reference Current (IREF) in the Extracted Testbench
+
+Even with net21 fixed, the operating point showed M1, M2, and M5 all sitting in subthreshold/cutoff, with drain currents in the nanoamp range instead of the designed ~100 µA mirror-derived currents. The extracted netlist's testbench contained **no current source instance at all**.
+
+IREF exists inside the OTA schematic itself (not the testbench) to bias M8's diode-connected reference; ideal current sources have no physical layout representation, and the BIAS node (net13) is internal to the OTA subckt — not exposed as a top-level port — so an external testbench-level IREF cannot reach it post-layout the normal way.
+
+**Fix (netlist-level workaround):** Since net13 still exists by name inside the extracted subckt, an ideal current source was added directly inside the subckt body via direct netlist editing:
+
+```spice
+IREF_FIX (net13 VDD) isource dc=100u
+```
+
+The terminal order matters: Spectre's isource convention pushes current out of the first terminal and pulls it in at the second. The first attempt, `(VDD net13)`, produced a total loop failure (zero gain). Switching to `(net13 VDD)` produced a plausible-looking STB result (the intermediate result in §14.1). However, the deeper bias-chain investigation in §13.4 found that this same `(net13 VDD)` orientation actually left net13 at an incorrect negative voltage once checked directly — and that the originally-discarded `(VDD net13)` orientation was the physically correct one all along, but only once combined with a guiding initial condition. The full resolution is below in §13.4.
+
+### 13.3 A Field-Reading Error: "id" vs "ids" in BSIM4 Operating-Point Data
+
+When extracting per-device operating-point data (Id, Vgs, Vth, gm) from Spectre's `myop.info` file to diagnose the bias chain, the field position for drain current was initially located by name match on `"id"`. This field's description, when checked more carefully, reads "Resistive drain current" — a specific, narrow quantity, not the actual total channel current. The real total drain-to-source current is a separate field named `"ids"` ("Resistive drain-to-source current"), positioned earlier in the BSIM4 struct.
+
+This error produced a misleading early read showing M8 carrying ~100 µA (matching the IREF value) with Vgs near zero — a physically impossible combination for a diode-connected device, which should have been a red flag. Re-deriving the field positions from the struct definition and re-reading with the correct `"ids"` field showed M8's actual channel current was only ~45 nA at that point, and M5's was effectively zero.
+
+> **Lesson:** When parsing PSF info files programmatically for unfamiliar fields, always check the field's "description" property, not just its name. Similarly named fields (`id` vs `ids`) can represent materially different physical quantities, and a result that looks plausible at a glance (matching the expected current magnitude) can still be the wrong field.
+
+### 13.4 Bistable DC Convergence and the Path to a Correct Bias Point
+
+Continuing from the `(net13 VDD)` IREF orientation that had produced the intermediate result in §14.1, a separate, explicit `dc` analysis (with `oppoint=rawfile` so device-level data could be inspected) was added to check the bias chain directly. It showed net13 settling at approximately **−0.68 V** — deeply negative, fully explaining why M5 and M8 were not conducting properly despite the earlier plausible-looking STB margins. This is the same class of issue documented at the schematic level: a high-gain, closed-loop OTA has multiple mathematically valid DC operating points, and the solver can converge to a non-physical one without guidance.
+
+| Attempt | Result |
+|---|---|
+| Add `ic I0.net13=0.55` (hierarchical initial condition) | Warning: ignored if not hierarchically qualified (bare `net13` is not a top-level node); once correctly qualified, accepted — but net13 still settled at −0.68 V using the `(net13 VDD)` IREF orientation, confirming that orientation was wrong despite the earlier plausible STB result |
+| Reverse IREF polarity back to `(VDD net13)` — the orientation originally tried first and discarded in §13.2 — while keeping the `ic` statement | net13 settled at **0.5715 V** — correct, matching the documented pre-layout BIAS value of 0.568 V almost exactly. The `(VDD net13)` orientation was right all along; it simply needed the `ic` statement to find that equilibrium instead of the degenerate zero-gain one |
+| Reorder netlist so `ic` and the explicit `dc` analysis run before `stb` | STB confirmed it reused the dc analysis's operating point ("operating point producer": "myop"); M8 showed ids=99.88 µA, vgs=0.568 V — correctly biased for the first time. However, STB margins were still NaN at this same point: VOUT and VIN+ had settled near 0.044 V, close to VSS, rather than mid-rail |
+| Add further `ic` statements on net18, net25, and VOUT/VIN+ together, on top of the working net13 fix | No effect — VOUT/VIN+ still settled near 0.044 V regardless |
+| Sweep VDD from 0 to 1.2V (continuation method, matching the schematic-level documentation's own approach to this class of problem) | Final converged point unchanged from the single-point case — the bad equilibrium persists across the whole ramp, indicating this is not simply the wrong starting guess but a structurally favoured outcome given the present circuit |
+
+**Conclusion of this investigation:** The bias generator itself (IREF → net13 → M8) is now correctly fixed and verified (§13.2–13.3). The remaining issue is that the overall closed-loop operating point still collapses toward VOUT/VIN+ near VSS rather than mid-rail, and this persists even with strong initial-condition guidance and a full continuation sweep. This pointed investigation toward the second stage's actual drive strength, leading to the finding below.
+
+### 13.5 Major Finding: M6 Wired as a Series Chain Instead of a Parallel Multi-Finger Device
+
+Checking M3/M4 (the diode-connected first-stage mirror) showed both in subthreshold with tiny, matched currents — consistent with simply mirroring whatever tiny current M1 was drawing, not an independent fault. Tracing the cause further upstream to the second stage, M6's full set of 25 finger instances was extracted from the netlist and the source/drain connectivity was reconstructed by hand:
+
+```
+VDD → avC10 → avC11 → avC12 → ... → avC32 → avC33 → VOUT
+```
+
+All 25 fingers form a single, unbroken, continuous chain from VDD to VOUT. Every internal node (avC10 through avC33) is simultaneously one finger's drain and the next finger's source — there is no point at which the structure splits into a clean "these nodes are source-type, those are drain-type" pattern. **This is a genuine series stack, not a parallel comb layout with some missing straps.**
+
+![M6 Finger Wiring — Intended vs As-Built](Image/M6_Finger_Wiring_Diagram.svg)
+*Intended: 25 fingers in parallel, all sources to VDD, all drains to VOUT (effective W=250µm). As-built: 25 fingers in series, sharing diffusion with no separating cut (effective L ≈ 25×180nm).*
+
+**Why this matters:** M6 is specified as a single 250 µm wide PMOS (25 fingers of 10 µm each, in parallel) for second-stage drive strength. Wired in series instead, the effective device behaves closer to one long, narrow, high-resistance transistor (effective channel length on the order of 25 × 180 nm) rather than a wide, strong pull-up. This explains why M6, despite being 5× wider than M7 and seeing a much larger gate overdrive, cannot pull VOUT up against M7's pull-down — it does not actually have anywhere near its nominal drive strength.
+
+This is assessed as the most likely root cause of the bistable convergence behaviour in §13.4: a correctly-functioning, full-strength M6 would be expected to dominate the bias point and pull the loop toward the intended mid-rail solution; a severely weakened M6 makes the degenerate near-VSS solution far more attractive to the solver.
+
+**Why the earlier fixes didn't help here:** The VIN+_avConflict fix (§12.4) responded to pin-purpose changes and a small Metal1 overlap because it was a marginal/borderline connectivity case. M6's series-chain structure was re-tested after marking the VDD and VOUT pins with proper Metal1 pin purpose, and the extracted netlist was byte-for-byte identical to before. This confirms the series-chain structure is a genuine, physical fact about how the diffusion is shared between adjacent fingers in the layout — not an extraction-tolerance artefact, and not fixable by the same class of small adjustment that worked for VIN+.
+
+**What a real fix requires:** Physically separating the shared diffusion between every adjacent pair of fingers (so each finger has its own independent source and drain region instead of sharing one continuous strip with its neighbour), then wiring all 25 newly-separated source regions to a common VDD bus and all 25 drain regions to a common VOUT/net25-side bus. This is substantial layout rework — closer to rebuilding M6's diffusion structure than adding a few missing contacts — and is logged as the next concrete task (§19) rather than attempted in this session.
+
+### 13.6 PEX / RCX Setup Notes (for repeating this process)
+
+| Topic | Detail |
+|---|---|
+| Substrate naming fix | RCX's setup files hardcode the substrate net name as `psubstrate`, while the local LVS extraction names it `pwell`. A global `sed 's/psubstrate/pwell/g'` across these files (with `_BACKUP` originals preserved) is required before RCX will run without a `-cap_ground_layer` error |
+| Stale view caching | Always use a fresh, never-before-used RCX output view name when testing fixes. Confirm by checking the subckt name in the generated netlist (`grep -n "subckt OTA_Project2_av_extracted" input.scs`) |
+| Schematic extraction error | If LVS fails with "schematic was never extracted," open the schematic and run Check and Save before retrying |
+| Reordering analyses | Spectre analyses that depend on a shared operating point (an explicit `dc` analysis and a later `stb` analysis) should be ordered so the `dc` analysis runs first; `stb` will then report "operating point producer" as the dc analysis's name and reuse its converged point rather than solving independently |
+
+### 13.7 Post-PEX Simulation Workaround — Cc/Rz Models Unsimulatable
+
+The PDK's `g45ncap1` (Cc) and `g45rspp` (Rz) models cannot be simulated directly post-PEX on this 32-bit installation, for reasons matching the previously documented 32-bit Monte Carlo limitation (missing process-corner derating parameters in the 32-bit model redirect).
+
+**Working substitution procedure:**
+
+| Step | Action |
+|---|---|
+| 1 | Replace the `R0 (...) ressppoly_pcell_0 ...` instance with an ideal resistor: `r=105` |
+| 2 | Replace the `M0 (...) g45ncap1 ...` instance with an ideal capacitor: `c=1.357p` |
+| 3 | Watch for multi-line continuations — replacing only the first line of a wrapped instance statement leaves an orphaned fragment that breaks parsing. Delete the leftover continuation line(s) too |
+| 4 | Add small (1 milliohm) link resistors between PEX-split segments of what should be one electrical node (needed for the Rz/Cc junction and for VOUT in nearly every extraction) |
+| 5 | Run `spectre` directly (not through ADE's interactive mode) to avoid IPC session-name issues |
+| 6 | For operating-point data, add an explicit DC analysis: `myop dc oppoint=rawfile`. Always verify field positions against the struct's description text, not just its name (§13.3) |
+
+---
+
+## 14. Pre-Layout vs Post-Layout Results
+
+Two distinct post-layout states were reached during this work, and both are recorded here for completeness.
+
+### 14.1 Intermediate Result (Before Full Bias-Chain Verification)
+
+Achieved after correcting IREF polarity, before the deeper operating-point checks in §13.3–13.5 revealed the bias chain was not yet fully settled:
+
+| Metric | Pre-Layout (Schematic) | Post-Layout (Intermediate) |
+|---|---|---|
+| DC Loop Gain | 75.6 dB | ~44.4 dB |
+| Phase Margin | 60.9° | 50.6° |
+| Gain Margin | Not separately recorded | 17.9 dB |
+| GBW (unity crossover) | 57.5 MHz | ~29.8 kHz |
+
+> No waveform capture exists for this intermediate point — values were read directly from the Spectre output log / calculator, not plotted.
+
+### 14.2 Final, Most Rigorously Verified State
+
+After confirming net13 = 0.5715 V (matching documented BIAS = 0.568 V) and M8 = 99.88 µA (matching the IREF reference) via corrected `ids` field readings and proper analysis ordering, STB analysis showed the closed loop collapsing to a degenerate near-VSS operating point (loop gain effectively zero, no usable margins), now root-caused to the M6 series-chain structural issue in §13.5.
+
+**Status:** The bias generator chain (IREF → M8 → M5 → M1/M2 tail) is confirmed correct and working in isolation. The second stage (M6) is confirmed to be the limiting structural problem preventing the closed loop from settling at its intended operating point. A clean, fully-passing post-PEX AC/STB result is expected once the M6 finger rework (§19) is complete.
+
+---
+
+## 15. Known Limitations & Documented Waivers — Physical Design
+
+| Limitation | Impact | Root Cause |
+|---|---|---|
+| M0.B (Cc's bulk): VOUT (schematic) vs VSS (layout) | Flagged by LVS as a bad net connection on M0 | The `nmoscap1v` Pcell's schematic symbol has no exposed B pin; B is internally tied to S/D=VOUT in the symbol. Documented waiver, no fix needed |
+| M5/M8 merge artifact in LVS | NM2 reported as merged result of three layout instances; width shown as 8µ vs schematic's 4µ | The two repurposed ABBA dummy fingers (M5) sit in the same diffusion run as M8; an LVS reporting/grouping artifact from the physical diffusion layout choice, not a real device-level short |
+| M6 wired as a 25-stage series chain instead of a parallel 250 µm device | Second stage has far less drive strength than intended; identified as the primary cause of the closed-loop bias point collapsing to a degenerate near-VSS solution | Adjacent fingers share continuous diffusion regions with no separating cut and no independent VDD/VOUT strapping. Requires diffusion-separation layout rework across all 25 fingers — logged as the next concrete task (§19) |
+
+---
+
+## 16. Results Summary
 
 | Simulation | Parameter | Measured | Target | Status |
 |---|---|---|---|---|
@@ -562,11 +776,15 @@ NMOS and PMOS guard rings must be physically separate — they must not share co
 | Corner | PM — FF / 125°C | 55.7° | > 60° | ❌ |
 | Offset | 3σ input offset (Pelgrom) | ~17.4 mV | < 5 mV | ❌ |
 | Layout | All devices placed | Yes | — | ✅ |
-| DRC / LVS / PEX | — | ⏳ Pending | — | — |
+| DRC | Assura DRC | 0 violations | Clean | ✅ |
+| LVS | Assura LVS | Matched (2 waivers) | Clean | ✅ |
+| PEX | RCX extraction | Complete (model substitution used) | — | ✅ |
+| Post-PEX | DC loop gain (intermediate) | ~44.4 dB | 75.6 dB (pre-layout) | ⚠️ |
+| Post-PEX | Closed-loop bias point (final, verified) | Collapses near VSS | Mid-rail | ❌ — root cause identified, fix pending |
 
 ---
 
-## 13. Design Limitations & Engineering Discussion
+## 17. Engineering Discussion — Design Limitations
 
 ### GBW (57.5 MHz vs 100 MHz target)
 A fundamental constraint of 1.2V supply + 10pF load in 45nm. The three compounding limits (gm1 headroom, Miller loading, p2 ceiling) were all explored — each fix to one spec degrades another. The 57.5 MHz / 60.9° result is the best achievable tradeoff in this design space.
@@ -583,9 +801,18 @@ Systematic, not random — GBW scales faster than p2 in the FF corner. Fix: incr
 ### Input offset (17.4 mV vs 5 mV target)
 M1/M2 at W=4µm is too small for good matching at 45nm. Meeting 5 mV requires W≈100µm which creates a subthreshold headroom conflict at 1.2V. Resolution: chopper stabilisation or relaxed offset spec.
 
+### LVS-vs-RCX connectivity discrepancy (VIN+_avConflict)
+LVS's topological pattern matching and RCX's strict geometric extraction are not equivalent checks — a net can be LVS-matched while still being electrically split in the extracted parasitic netlist. Caught only by directly grepping the extracted netlist for the port name rather than trusting the LVS pass/fail report alone.
+
+### Bistable DC convergence post-layout
+The same class of issue documented at the schematic level (a high-gain closed-loop amplifier has multiple mathematically valid DC solutions) reappeared post-layout, compounded by a genuine structural defect (M6 series chain) rather than just a solver-guidance problem. Initial conditions and continuation sweeps alone could not overcome a structurally weakened second stage — this is the key engineering takeaway: simulator convergence behaviour can be a symptom of a real physical-layout defect, not just a numerical nuisance.
+
+### M6 series-chain wiring defect (open item)
+The most significant finding of the post-layout phase. A Pcell-generated 25-finger device shared continuous diffusion between adjacent fingers with no separating cut, turning an intended wide parallel device into an effective long, narrow, high-resistance one. Confirmed as a genuine physical/geometric fact (not an extraction-tolerance artefact) by re-testing after pin-purpose fixes that resolved a different, similar-looking issue (VIN+_avConflict) — those fixes had zero effect here, proving the two were different classes of problem.
+
 ---
 
-## 14. Environment & 32-bit Workarounds
+## 18. Environment & 32-bit Workarounds
 
 Running Cadence IC615 on CentOS 6 32-bit required several non-obvious fixes:
 
@@ -597,6 +824,18 @@ Running Cadence IC615 on CentOS 6 32-bit required several non-obvious fixes:
 | ADE XL temperature sweep fails silently | Variable must be named exactly `temperature` (lowercase) — `temp` or `Temperature` cause silent errors |
 | AHDL compiler memory issues | `CDS_CMI_COMPLEVEL=0` added to `~/.bashrc` |
 | SFE-874 from duplicate model file entries | Remove all extra entries from Setup → Model Libraries; keep only one correct path |
+| RCX hardcodes substrate net name as `psubstrate`; local extraction uses `pwell` | Global `sed 's/psubstrate/pwell/g'` across RCX setup files (originals backed up with `_BACKUP` suffix) |
+| Post-PEX Cc (`g45ncap1`) / Rz (`g45rspp`) models unsimulatable on 32-bit — missing corner-derating parameters | Substitute ideal `r=105` / `c=1.357p` elements directly in the extracted netlist; run `spectre` directly rather than through ADE's interactive mode to avoid IPC session-name issues |
+| BSIM4 `myop.info` field `"id"` ≠ total channel current | Use field `"ids"` ("Resistive drain-to-source current"); always check the field's description text, not just its name |
+
+---
+
+## 19. Next Steps
+
+- Rework M6's layout to physically separate the shared diffusion between every adjacent finger pair, then strap all 25 sources to VDD and all 25 drains to net25/VOUT in true parallel
+- After the M6 rework, re-run LVS → RCX → the Cc/Rz substitution procedure (§13.7) → STB, expecting the closed loop to now settle at the intended mid-rail operating point without needing forced initial conditions
+- Capture a clean post-PEX AC/STB waveform once the above is complete
+- Move to scoping Projects 2–5 once Project 1's documentation is finalised, treating the M6 rework as a tracked follow-up rather than a blocker
 
 ---
 
@@ -619,3 +858,4 @@ Running Cadence IC615 on CentOS 6 32-bit required several non-obvious fixes:
 |---|---|
 | [`OTA_Simulation_Report_AC_DC.docx`](OTA_Simulation_Report_AC_DC.docx) | Formal simulation report — DC operating point, AC/STB results, debug history |
 | [`OTA_Simulation_Study_Guide_v2.docx`](OTA_Simulation_Study_Guide_v2.docx) | Complete study guide — all simulations, equations, interview prep, environment notes |
+| [`Project1_Layout_LVS_PEX_Guide.docx`](Project1_Layout_LVS_PEX_Guide.docx) | Full layout/LVS/PEX debugging log — net-matching fixes, LVS-vs-RCX discrepancy, bias-chain investigation, M6 structural finding |
