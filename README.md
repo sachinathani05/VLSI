@@ -20,7 +20,7 @@ VLSI/
 ├── RTL_to_GDSII_Projects/
 │   ├── P1_SPI_Master_RTL_Directed_Verification/  ← SPI Mode 0 FSM · 6/6 directed tests passing
 │   ├── P2_AXI4_Lite_UVM_Verification/            ← In progress
-│   ├── P3_RTL_to_GDSII_OpenLane_SKY130/          ← In progress
+│   ├── P3_RTL_to_GDSII_OpenLane_SKY130/          ← UART RTL-to-GDSII complete — 0 STA violations, GDS exported
 │   ├── P4_STA_Timing_Closure/                    ← In progress
 │   └── P5_RISCV_ALU_Full_Stack/                  ← In progress
 ├── Verilog/
@@ -50,7 +50,7 @@ VLSI/
 ## Highlights
 
 ### 45nm Two-Stage Miller-Compensated OTA (GPDK045)
-Complete analog IC design and characterisation in Cadence Virtuoso 45nm.
+Schematic, layout, and signoff verification in Cadence Virtuoso 45nm. Post-PEX debugging in progress.
 
 - **DC:** All signal-path devices in saturation. VOUT = 0.600V at mid-rail. M1/M2 matched within 0.3%.
 - **AC:** DC gain 75.6 dB · GBW 57.5 MHz · Phase margin 60.9° (TT/27°C)
@@ -58,6 +58,8 @@ Complete analog IC design and characterisation in Cadence Virtuoso 45nm.
 - **Noise:** Thermal floor 9.5 nV/√Hz · Flicker corner 1.4 MHz
 - **CMRR:** 76.4 dB · **PSRR:** 164.4 dB
 - **Corner sweep:** 9 corners (TT/SS/FF × −40/27/125°C) — FF corner identified as marginal, fix proposed
+- **Layout signoff:** DRC clean (0 violations) · LVS matched (2 documented waivers) · PEX extracted
+- **Post-layout debugging:** Root-caused an LVS-vs-RCX extraction discrepancy, a tail-node substrate short, and a structural M6 finger-wiring defect (series chain instead of parallel) — concrete layout fix identified, pending implementation
 
 ### 65nm UMC Standard Cell Design (EEE8127 — Newcastle University)
 Complete CMOS IC design flow in UMC 65nm using Cadence Virtuoso + Mentor Calibre.
@@ -74,6 +76,16 @@ Parameterised SPI Master in SystemVerilog — 5-state Moore FSM, Mode 0.
 - **Patterns tested:** Alternating bits (0xA5, 0x55), all-ones, all-zeros, LSB-only, MSB-only
 - **Bugs documented:** 6 real RTL bugs found and fixed during development
 - **Next:** Week 2 — UVM environment (seq_item → driver → monitor → scoreboard)
+
+### UART — Full RTL-to-GDSII Flow (OpenLane/SKY130)
+Complete physical design flow from RTL to manufacturing-ready GDSII using OpenLane 2, Yosys, OpenROAD, Magic, KLayout, and Netgen.
+
+- **Synthesis:** 267 cells, 60 flip-flops, 3034.16 µm² — 0 CHECK problems
+- **STA:** **0 setup/hold violations across all 9 PVT corners** — worst setup 10.55 ns, worst hold 0.144 ns
+- **CTS:** Real measured clock skew ~1.6 ps
+- **Routing:** 0 congestion overflow, 0 antenna violations, 0 DRC violations
+- **Sign-off:** DRC clean (Magic + KLayout cross-check), LVS matched uniquely (Netgen)
+- **Output:** 3 GDSII files generated, foundry-submission ready
 
 ### 90nm Ring Oscillator (GPDK090)
 3-stage CMOS ring oscillator. Measured frequency: **1.45 GHz** (tp = 115 ps/stage). W-L parametric sweep with CSV + plots.
@@ -92,9 +104,9 @@ Built from scratch. Round-robin scheduler, 16-register context switching, mutex,
 |---------|-------|-------|
 | SPI Master UVM Testbench (Week 2+) | Verification | SystemVerilog · UVM · QuestaSim |
 | AXI4-Lite Verification IP | Verification | SystemVerilog · UVM |
-| RISC-V ALU RTL-to-GDSII | Physical Design | OpenLane · SKY130 PDK |
-| STA Timing Closure | Physical Design | OpenSTA · SDC · TCL |
-| RISC-V ALU Full Stack Integration | Full Stack | RTL → Synthesis → P&R → GDSII |
+| STA Timing Closure (custom RTL) | Physical Design | OpenSTA · SDC · TCL |
+| RISC-V ALU — Full Stack Integration | Full Stack | RTL → Synthesis → P&R → GDSII |
+| OTA Post-PEX Fix (M6 layout rework) | Analog | Cadence Virtuoso 45nm |
 | LDO, SRAM, StrongARM, SC Integrator | Analog | Cadence Virtuoso 45nm |
 
 ---
