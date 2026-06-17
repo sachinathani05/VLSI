@@ -1,0 +1,78 @@
+Reading OpenROAD database at '/home/sachin/vlsi/uart-rtl-to-gdsii/runs/RUN_2026-06-17_14-25-36/32-openroad-resizertimingpostcts/uart_top.odb'…
+Reading library file at '/home/sachin/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib'…
+Reading design constraints file at '/home/sachin/vlsi/uart-rtl-to-gdsii/rtl/uart.sdc'…
+[INFO] No information on clock propagation in input SDC file-- propagating all clocks.
+[INFO] Setting signal min routing layer to: met1 and clock min routing layer to met1. 
+[INFO] Setting signal max routing layer to: met5 and clock max routing layer to met5. 
+-congestion_iterations 50 -verbose
+[INFO GRT-0020] Min routing layer: met1
+[INFO GRT-0021] Max routing layer: met5
+[INFO GRT-0022] Global adjustment: 30%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0043] No OR_DEFAULT vias defined.
+[INFO GRT-0088] Layer li1     Track-Pitch = 0.4600  line-2-Via Pitch: 0.3400
+[INFO GRT-0088] Layer met1    Track-Pitch = 0.3400  line-2-Via Pitch: 0.3400
+[INFO GRT-0088] Layer met2    Track-Pitch = 0.4600  line-2-Via Pitch: 0.3500
+[INFO GRT-0088] Layer met3    Track-Pitch = 0.6800  line-2-Via Pitch: 0.6150
+[INFO GRT-0088] Layer met4    Track-Pitch = 0.9200  line-2-Via Pitch: 1.0400
+[INFO GRT-0088] Layer met5    Track-Pitch = 3.4000  line-2-Via Pitch: 3.1100
+[INFO GRT-0019] Found 10 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 19
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0043] No OR_DEFAULT vias defined.
+[INFO GRT-0004] Blockages: 884
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+li1        Vertical            0             0          0.00%
+met1       Horizontal       4404          2127          51.70%
+met2       Vertical         3210          1985          38.16%
+met3       Horizontal       2202          1430          35.06%
+met4       Vertical         1311           773          41.04%
+met5       Horizontal        432           208          51.85%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 2072
+[INFO GRT-0198] Via related Steiner nodes: 21
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 2534
+[INFO GRT-0112] Final usage 3D: 8528
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Overflow
+---------------------------------------------------------------------------------------
+li1                  0             0            0.00%             0 /  0 /  0
+met1              2127           465           21.86%             0 /  0 /  0
+met2              1985           458           23.07%             0 /  0 /  0
+met3              1430             3            0.21%             0 /  0 /  0
+met4               773             0            0.00%             0 /  0 /  0
+met5               208             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total             6523           926           14.20%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 11847 um
+[INFO GRT-0014] Routed nets: 439
+%OL_CREATE_REPORT antenna.rpt
+[INFO GRT-0043] No OR_DEFAULT vias defined.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+%OL_END_REPORT
+[INFO] Setting RC values…
+Setting global connections for newly added cells…
+[INFO] Setting global connections...
+Updating metrics…
+Cell type report:                       Count       Area
+  Fill cell                                64     240.23
+  Tap cell                                102     127.62
+  Clock buffer                             12     260.25
+  Timing Repair Buffer                    151    1378.82
+  Inverter                                 16      60.06
+  Clock inverter                            4      95.09
+  Sequential cell                          60    1204.91
+  Multi-Input combinational cell          191    1521.46
+  Total                                   600    4888.44
+Writing OpenROAD database to '/home/sachin/vlsi/uart-rtl-to-gdsii/runs/RUN_2026-06-17_14-25-36/34-openroad-globalrouting/uart_top.odb'…
+Writing layout to '/home/sachin/vlsi/uart-rtl-to-gdsii/runs/RUN_2026-06-17_14-25-36/34-openroad-globalrouting/uart_top.def'…
