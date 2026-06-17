@@ -851,11 +851,3 @@ Running Cadence IC615 on CentOS 6 32-bit required several non-obvious fixes:
 | Pelgrom sigma | `√2 × AVT / √(W·L)` | √2 × 3mV / √(4u × 0.18u) = 4.99 mV per pair |
 
 ---
-
-## Supporting Documents
-
-| File | Contents |
-|---|---|
-| [`OTA_Simulation_Report_AC_DC.docx`](OTA_Simulation_Report_AC_DC.docx) | Formal simulation report — DC operating point, AC/STB results, debug history |
-| [`OTA_Simulation_Study_Guide_v2.docx`](OTA_Simulation_Study_Guide_v2.docx) | Complete study guide — all simulations, equations, interview prep, environment notes |
-| [`Project1_Layout_LVS_PEX_Guide.docx`](Project1_Layout_LVS_PEX_Guide.docx) | Full layout/LVS/PEX debugging log — net-matching fixes, LVS-vs-RCX discrepancy, bias-chain investigation, M6 structural finding |
