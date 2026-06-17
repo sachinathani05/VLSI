@@ -8,8 +8,8 @@ Process node: GPDK045 45nm · VDD = 1.2V · Tool: Cadence Virtuoso IC615
 
 | # | Project | Status | Key Techniques |
 |---|---------|--------|----------------|
-| 1 | [Two-Stage Miller-Compensated OTA](Project_01_Two_Stage_OTA_45nm/) | 🟡 Completed with PEX fix in progress | AC/DC/transient · Noise · CMRR · PSRR · Corner sweep · Full layout · DRC/LVS/PEX signoff |
-| 2 | Low-Dropout Regulator (LDO) | 🔜 Planned | Full IP sub-system · Loop stability · Load transient |
+| 1 | [Two-Stage Miller-Compensated OTA](Project_01_Two_Stage_OTA_45nm/) | ✅ Completed | AC/DC/transient · Noise · CMRR · PSRR · Corner sweep · Full layout · DRC/LVS/PEX signoff |
+| 2 | Low-Dropout Regulator (LDO) | 🟡 In Progress | Full IP sub-system · Loop stability · Load transient |
 | 3 | 6T SRAM Bit-Cell Array | 🔜 Planned | SNM butterfly curves · DRC/LVS · Yield analysis |
 | 4 | StrongARM Latch | 🔜 Planned | Metastability · Common-centroid layout · PEX timing |
 | 5 | Switched-Capacitor Integrator | 🔜 Planned | Charge injection · Capacitor matching · MOM layout |
