@@ -49,8 +49,8 @@ VLSI/
 
 ## Highlights
 
-### 45nm Two-Stage Miller-Compensated OTA (GPDK045)
-Schematic, layout, and signoff verification in Cadence Virtuoso 45nm. Post-PEX debugging in progress.
+### 45nm Two-Stage Miller-Compensated OTA (GPDK045) ✅
+Complete schematic-to-signoff analog IC design in Cadence Virtuoso 45nm.
 
 - **DC:** All signal-path devices in saturation. VOUT = 0.600V at mid-rail. M1/M2 matched within 0.3%.
 - **AC:** DC gain 75.6 dB · GBW 57.5 MHz · Phase margin 60.9° (TT/27°C)
@@ -59,7 +59,7 @@ Schematic, layout, and signoff verification in Cadence Virtuoso 45nm. Post-PEX d
 - **CMRR:** 76.4 dB · **PSRR:** 164.4 dB
 - **Corner sweep:** 9 corners (TT/SS/FF × −40/27/125°C) — FF corner identified as marginal, fix proposed
 - **Layout signoff:** DRC clean (0 violations) · LVS matched (2 documented waivers) · PEX extracted
-- **Post-layout debugging:** Root-caused an LVS-vs-RCX extraction discrepancy, a tail-node substrate short, and a structural M6 finger-wiring defect (series chain instead of parallel) — concrete layout fix identified, pending implementation
+- **Post-layout debugging:** Root-caused an LVS-vs-RCX extraction discrepancy, a tail-node substrate short, and a structural M6 finger-wiring defect (series chain instead of parallel) — fully documented with proposed fix as a known limitation
 
 ### 65nm UMC Standard Cell Design (EEE8127 — Newcastle University)
 Complete CMOS IC design flow in UMC 65nm using Cadence Virtuoso + Mentor Calibre.
@@ -106,8 +106,8 @@ Built from scratch. Round-robin scheduler, 16-register context switching, mutex,
 | AXI4-Lite Verification IP | Verification | SystemVerilog · UVM |
 | STA Timing Closure (custom RTL) | Physical Design | OpenSTA · SDC · TCL |
 | RISC-V ALU — Full Stack Integration | Full Stack | RTL → Synthesis → P&R → GDSII |
-| OTA Post-PEX Fix (M6 layout rework) | Analog | Cadence Virtuoso 45nm |
-| LDO, SRAM, StrongARM, SC Integrator | Analog | Cadence Virtuoso 45nm |
+| Low-Dropout Regulator (LDO) | Analog | Cadence Virtuoso 45nm |
+| 6T SRAM, StrongARM, SC Integrator | Analog | Cadence Virtuoso 45nm |
 
 ---
 
