@@ -112,7 +112,7 @@ Verification: `3034.16 µm² (cell area) / 7567 µm² (core area) ≈ 40.1%` ✅
 
 > **Why core area > cell area, and die area > core area:** the gap between core and die holds I/O pins and the power ring. The gap between cell area and core area (60% empty at 40% utilisation) is reserved for routing channels — wires need room to connect cells without overlapping.
 
-![Floorplan](images/01_floorplan.png)
+![Floorplan](Images/01_floorplan.png)
 *Empty 32×189 placement grid with power rails (VPWR/VGND) and I/O pin locations, before any cells are placed*
 
 ---
@@ -131,7 +131,7 @@ Verification: `3034.16 µm² (cell area) / 7567 µm² (core area) ≈ 40.1%` ✅
 > **Fill cells (64):** plug gaps in rows where SKY130 requires continuous diffusion/well layers. No logic function.
 > **HPWL (Half-Perimeter Wire Length):** a fast geometric estimate (half the bounding-box perimeter of a net's pins) — analogous to *displacement* in physics. It is not the real routed wire length, which is computed later and is typically longer since real wires must navigate around obstacles and obey per-layer direction rules.
 
-![Placement](images/02_placement.png)
+![Placement](Images/02_placement.png)
 *455 cells placed into the row grid, with met1 routing-layer geometry visible inside standard cells*
 
 ---
@@ -153,7 +153,7 @@ TritonCTS builds an **H-tree** — symmetric buffer/wire structure distributing 
 
 > **The skew result that matters most:** the H-tree's structural symmetry (every flip-flop exactly 2 buffer hops from root, roughly equal wire length per level) drove *real* skew down to ~1.6ps — essentially negligible. The `0.5ns` figure that dominates the formal "setup skew" calculation in STA is almost entirely the **designed-in clock uncertainty margin from the SDC**, not actual clock-tree skew. The H-tree over-delivered; the conservative SDC margin was the real cost.
 
-![Clock Tree Synthesis](images/03_cts.png)
+![Clock Tree Synthesis](Images/03_cts.png)
 *Clock buffers (clkbuf_16/clkbuf_8) inserted across the placement grid, forming the H-tree*
 
 ---
@@ -185,7 +185,7 @@ TritonCTS builds an **H-tree** — symmetric buffer/wire structure distributing 
 
 > Real wirelength (6394µm) came out *shorter* than global routing's coarse estimate (11,847µm) — global routing intentionally overestimates to leave margin; detailed routing found tighter, exact paths.
 
-![Routing](images/04_routing.png)
+![Routing](Images/04_routing.png)
 *Final routed metal geometry — met1/met2 wires connecting all 455 placed cells*
 
 ---
@@ -270,7 +270,7 @@ uart_top.klayout.gds    ← KLayout stream-out
 
 > **On the XOR cross-check:** `KLayout.XOR` / `Checker.XOR` runs automatically between the Magic and KLayout stream-outs as part of this same flow, comparing their exported geometry shape-by-shape. The full run completed with zero ERROR lines through this step and on into a clean DRC/LVS sign-off — strong evidence the two exports agree — though the exact diff report itself wasn't separately inspected in this session.
 
-![Final GDSII Layout](images/05_gdsii_final.png)
+![Final GDSII Layout](Images/05_gdsii_final.png)
 *Complete, signed-off physical layout — ready for foundry submission*
 
 ---
@@ -353,15 +353,19 @@ Running OpenLane 2 + Yosys + OpenROAD on WSL2 Ubuntu 22.04 required resolving se
 
 | File | Contents |
 |---|---|
-| [`reports/synthesis.log`](reports/synthesis.log) | Full Yosys synthesis log — AST parsing, optimization passes, FSM detection and re-encoding |
-| [`reports/openroad-floorplan.log`](reports/openroad-floorplan.log) | Die/core area calculation, row/site grid generation |
-| [`reports/openroad-detailedplacement.log`](reports/openroad-detailedplacement.log) | HPWL optimization, cell mirroring, displacement analysis |
-| [`reports/cts.rpt`](reports/cts.rpt) | Clock tree buffer count, sink count, fanout distribution |
-| [`reports/global_routing.log`](reports/global_routing.log) | Per-layer congestion analysis, wirelength, antenna check |
-| [`reports/detailed_routing.log`](reports/detailed_routing.log) | DRC violation iteration log, final via/wirelength counts |
-| [`reports/sta_summary.rpt`](reports/sta_summary.rpt) | Full WNS/TNS table across all 9 PVT corners |
-| [`reports/lvs.netgen.rpt`](reports/lvs.netgen.rpt) | Full device/net match report from Netgen LVS |
-| [`gds/uart_top.gds`](gds/uart_top.gds) | Final manufacturing-ready GDSII file |
+| [`RTL/uart_tx.v`](RTL/uart_tx.v) | Transmitter RTL — 4-state FSM, parameterised baud rate, `tx_data_latch` |
+| [`RTL/uart_rx.v`](RTL/uart_rx.v) | Receiver RTL — mid-bit sampling, glitch rejection on the start bit |
+| [`RTL/uart_top.v`](RTL/uart_top.v) | Structural top-level, synthesis entry point |
+| [`RTL/uart.sdc`](RTL/uart.sdc) | Full timing constraints file |
+| [`Reports/synthesis.log`](Reports/synthesis.log) | Full Yosys synthesis log — AST parsing, optimization passes, FSM detection and re-encoding |
+| [`Reports/openroad-floorplan.log`](Reports/openroad-floorplan.log) | Die/core area calculation, row/site grid generation |
+| [`Reports/openroad-detailedplacement.log`](Reports/openroad-detailedplacement.log) | HPWL optimization, cell mirroring, displacement analysis |
+| [`Reports/cts.rpt`](Reports/cts.rpt) | Clock tree buffer count, sink count, fanout distribution |
+| [`Reports/global_routing.log`](Reports/global_routing.log) | Per-layer congestion analysis, wirelength, antenna check |
+| [`Reports/detailed_routing.log`](Reports/detailed_routing.log) | DRC violation iteration log, final via/wirelength counts |
+| [`Reports/sta_summary.rpt`](Reports/sta_summary.rpt) | Full WNS/TNS table across all 9 PVT corners |
+| [`Reports/lvs.netgen.rpt`](Reports/lvs.netgen.rpt) | Full device/net match report from Netgen LVS |
+| [`GDS/uart_top.gds`](GDS/uart_top.gds) | Final manufacturing-ready GDSII file |
 
 > A `docs/pd_notes.md` study-guide-style writeup (design decisions, debugging journey, interview prep) is planned as a future addition, in the same spirit as a project retrospective — not yet written as of this commit.
 
