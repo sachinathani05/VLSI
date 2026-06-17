@@ -61,7 +61,7 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 | `fz = gm6 / (2π·Cc)` | RHP zero from Cc alone — removed by Rz |
 | `Rz_ideal = 1/gm6` | Nulling resistor value to push zero to infinity |
 
-![OTA Schematic](Image/OTA_Scehmatic.jpg)
+![OTA Schematic](Images/OTA_Scehmatic.jpg)
 *Full OTA schematic with device labels, net names (NET_A, NET_B, TAIL, BIAS, VOUT), and Rz-Cc feedback path*
 
 ---
@@ -92,7 +92,7 @@ Miller:  VOUT → Cc → Rz → NET_B    (feedback compensation path only)
 **Testbench:** Unity-gain buffer configuration (VOUT → VIN+, VIN− = 0.6V DC, VDD = 1.2V).  
 **Purpose:** Verify every transistor is in the correct operating region before running any AC or transient simulation. A device in triode has significantly lower output impedance and will degrade gain.
 
-![AC & DC Testbench Schematic](Image/OTA_AC%26DC_TB_Scehmatic.jpg)
+![AC & DC Testbench Schematic](Images/OTA_AC%26DC_TB_Scehmatic.jpg)
 *AC and DC testbench — unity-gain buffer with iprobe inserted in feedback wire for STB analysis*
 
 ### 3.1 Device Operating Points (TT, 27°C)
@@ -182,7 +182,7 @@ M6 at W=250µm has large Cgd6. Miller multiplication at NET_B effectively increa
 | 2 pF | 600 µm | 60 MHz | 67.6° | Near target; GBW still below 100 MHz |
 | **1.35 pF** | **250 µm** | **57.5 MHz** | **60.9°** | **Final — best achievable tradeoff** |
 
-![Bode Plot - AC Loop Gain](Image/OTA_AC.jpg)
+![Bode Plot - AC Loop Gain](Images/OTA_AC.jpg)
 *Loop gain magnitude (dB) and phase (°) vs. frequency. DC gain 75.6 dB, GBW crossing at 57.5 MHz, phase at GBW = −119.1°, PM = 60.9°*
 
 ---
@@ -238,10 +238,10 @@ The Rz-Cc network creates a LHP zero to cancel the Miller pole (p1). Perfect can
 
 This is not a design error but a known tradeoff: exact Rz=1/gm6 cancellation would improve falling settling but gm6 varies with bias and corner, so a fixed Rz can never perfectly cancel at all conditions.
 
-![Transient Full Waveform](Image/Vpulse_full_waveform.jpg)
+![Transient Full Waveform](Images/Vpulse_full_waveform.jpg)
 *Full transient — VOUT (green) and VIN (red). Fast rising edges, slow exponential falling tails visible.*
 
-![Transient One Period Zoom](Image/oneperiod_Vpulse.jpg)
+![Transient One Period Zoom](Images/oneperiod_Vpulse.jpg)
 *Single period zoom — rising edge overshoot (~3.3%), fast settling on rising side, slow doublet tail on falling side.*
 
 ---
@@ -297,7 +297,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 | Baseband (WiFi/BT) | 1 MHz – 50 MHz | ✅ Near/above flicker corner — acceptable |
 | RF receiver (2.4 GHz) | 2.4 GHz | ✅ Far above flicker — thermal floor only at 9.5 nV/√Hz |
 
-![Noise Waveform](Image/OTA_Noise_Waveform.jpg)
+![Noise Waveform](Images/OTA_Noise_Waveform.jpg)
 *Log-log input-referred noise: 1/f slope below 1.4 MHz, flat thermal floor at 9.5 nV/√Hz, noise gain peaking above 20 MHz.*
 
 ---
@@ -326,7 +326,7 @@ At 45nm, gate oxide is ~1.5 nm — one or two atomic layers. This creates more i
 
 Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-unity low-frequency Acm is caused by M5 in triode — a triode tail current source has low output impedance and cannot suppress common-mode inputs effectively. CMRR still passes because differential gain is high enough. Above ~200 kHz, Acm rolls off and CMRR improves significantly (>110 dB at 10 MHz).
 
-![CMRR Waveform](Image/CMRR_waveform.jpg)
+![CMRR Waveform](Images/CMRR_waveform.jpg)
 *Acm (dB) vs. frequency: flat at −0.807 dB from DC to 100 kHz, rolling off to −35 dB at 10 MHz.*
 
 ---
@@ -358,7 +358,7 @@ Acm is nearly flat at −0.807 dB from DC to ~100 kHz, then rolls off. The near-
 
 CMRR=76.4 dB, PSRR=164.4 dB — an 88 dB difference. VDD perturbation must couple through transistors to reach VOUT, and the feedback loop actively suppresses any supply-induced output error. Loop gain = 75.6 dB ≈ 6000× suppresses supply disturbances multiplicatively. Common-mode signals, by contrast, enter directly through input terminals and bypass the full loop gain benefit.
 
-![PSRR Waveform](Image/PSRR_Waveform.jpg)
+![PSRR Waveform](Images/PSRR_Waveform.jpg)
 *A_supply (dB20) vs. frequency: −88.79 dB at 1 kHz, giving PSRR = 164.4 dB.*
 
 ---
@@ -414,16 +414,16 @@ Physical reason: PMOS is hole-based transport. Hole mobility degrades more steep
 
 **Proposed fix:** Increase Cc from 1.35 pF → 1.55 pF. This lowers GBW at all corners by ×(1.35/1.55)=0.87 without changing p2. FF/27°C GBW drops from 62 → 54 MHz, restoring PM above 60°. Trade-off: TT/27°C GBW drops from 57 → ~50 MHz.
 
-![Loop Gain Corner Waveform - TT](Image/LoopGain_Corner_Waveform.jpg)
+![Loop Gain Corner Waveform - TT](Images/LoopGain_Corner_Waveform.jpg)
 *Loop gain Bode plot — corner sweep overlay. Gain and phase vs. frequency across TT/SS/FF corners.*
 
-![Loop Gain Corner Waveform - SS/FF comparison](Image/LoopGain_Corner_Waveform_2.jpg)
+![Loop Gain Corner Waveform - SS/FF comparison](Images/LoopGain_Corner_Waveform_2.jpg)
 *Corner sweep — SS and FF phase margin comparison. FF corner phase margin degradation visible at GBW crossing.*
 
-![Loop Gain Corner Waveform - Temperature sweep](Image/LoopGain_Corner_Waveform_3.jpg)
+![Loop Gain Corner Waveform - Temperature sweep](Images/LoopGain_Corner_Waveform_3.jpg)
 *Corner sweep across temperatures. GBW range: 25.5 MHz (SS/125°C) to 92.5 MHz (FF/−40°C).*
 
-![Corner Case Results Table](Image/Corner_Case_Result.png)
+![Corner Case Results Table](Images/Corner_Case_Result.png)
 *ADE XL results table: all 9 corner/temperature simulation points with GBW and phase margin values.*
 
 ---
@@ -497,7 +497,7 @@ Working backwards: need σ(Vos) < 1.67 mV, which requires M1/M2 W ≈ 100 µm (2
 | PEX (Assura RCX) | ✅ Extracted — Cc/Rz model substitution required, see §13.7 |
 | Post-PEX AC/STB | ⚠️ Bias chain verified correct in isolation; closed-loop operating point not yet settling at intended mid-rail — root-caused to §13.5, fix pending |
 
-![Full Chip Layout](Image/OTA_Full_Layout.jpg)
+![Full Chip Layout](Images/OTA_Full_Layout.jpg)
 *Top-level Virtuoso layout — ABBA common-centroid differential pair, M3/M4 load, M5 tail, M6/M7 second stage, M8 bias, Cc/Rz, NMOS/PMOS guard rings.*
 
 ### 11.2 ABBA Common-Centroid for M1/M2
@@ -581,7 +581,7 @@ Across nearly every unmatched net, the root cause was the same: a gate (or share
 
 This single technique took unmatched internal nets from 42 down to single digits.
 
-![VIN+/VIN- Gate Strap Fix](Image/LVS_VINplus_GateStrap_Fix.jpg)
+![VIN+/VIN- Gate Strap Fix](Images/LVS_VINplus_GateStrap_Fix.jpg)
 *ABBA row showing the Metal1+Cont gate-strap connections added for VIN+/VIN− on M1/M2's gate fingers.*
 
 ### 12.3 New DRC Violations From the Added Contacts
@@ -677,7 +677,7 @@ VDD → avC10 → avC11 → avC12 → ... → avC32 → avC33 → VOUT
 
 All 25 fingers form a single, unbroken, continuous chain from VDD to VOUT. Every internal node (avC10 through avC33) is simultaneously one finger's drain and the next finger's source — there is no point at which the structure splits into a clean "these nodes are source-type, those are drain-type" pattern. **This is a genuine series stack, not a parallel comb layout with some missing straps.**
 
-![M6 Finger Wiring — Intended vs As-Built](Image/M6_Finger_Wiring_Diagram.svg)
+![M6 Finger Wiring — Intended vs As-Built](Images/M6_Finger_Wiring_Diagram.svg)
 *Intended: 25 fingers in parallel, all sources to VDD, all drains to VOUT (effective W=250µm). As-built: 25 fingers in series, sharing diffusion with no separating cut (effective L ≈ 25×180nm).*
 
 **Why this matters:** M6 is specified as a single 250 µm wide PMOS (25 fingers of 10 µm each, in parallel) for second-stage drive strength. Wired in series instead, the effective device behaves closer to one long, narrow, high-resistance transistor (effective channel length on the order of 25 × 180 nm) rather than a wide, strong pull-up. This explains why M6, despite being 5× wider than M7 and seeing a much larger gate overdrive, cannot pull VOUT up against M7's pull-down — it does not actually have anywhere near its nominal drive strength.
