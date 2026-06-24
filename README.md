@@ -20,7 +20,7 @@ VLSI/
 ├── RTL_to_GDSII_Projects/
 │   ├── P1_SPI_Master_RTL_Directed_Verification/  ← SPI Mode 0 FSM · 6/6 directed tests passing
 │   ├── P2_AXI4_Lite_UVM_Verification/            ← In progress
-│   ├── P3_RTL_to_GDSII_OpenLane_SKY130/          ← UART RTL-to-GDSII complete — 0 STA violations, GDS exported
+│   ├── P3_RTL_to_GDSII_OpenLane_SKY130/          ← UART RTL-to-GDSII complete — 0 STA violations, GDS exported + 3 depth exercises
 │   ├── P4_STA_Timing_Closure/                    ← In progress
 │   └── P5_RISCV_ALU_Full_Stack/                  ← In progress
 ├── Verilog/
@@ -86,6 +86,7 @@ Complete physical design flow from RTL to manufacturing-ready GDSII using OpenLa
 - **Routing:** 0 congestion overflow, 0 antenna violations, 0 DRC violations
 - **Sign-off:** DRC clean (Magic + KLayout cross-check), LVS matched uniquely (Netgen)
 - **Output:** 3 GDSII files generated, foundry-submission ready
+- **Exercises:** [Timing stress-test & ECO ceiling](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise1_Timing/) · [Congestion boundary hunt](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise2_Congestion/) · [Manual OpenROAD Tcl driving](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise3_ManualPD/)
 
 ### 90nm Ring Oscillator (GPDK090)
 3-stage CMOS ring oscillator. Measured frequency: **1.45 GHz** (tp = 115 ps/stage). W-L parametric sweep with CSV + plots.
