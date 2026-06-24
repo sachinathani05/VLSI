@@ -22,6 +22,7 @@
 12. [Engineering Discussion & Design Decisions](#12-engineering-discussion--design-decisions)
 13. [Environment Setup & Debugging Log](#13-environment-setup--debugging-log)
 14. [Key Equations Quick Reference](#14-key-equations-quick-reference)
+15. [Supplementary Exercises](#15-supplementary-exercises)
 
 ---
 
@@ -367,7 +368,23 @@ Running OpenLane 2 + Yosys + OpenROAD on WSL2 Ubuntu 22.04 required resolving se
 | [`Reports/lvs.netgen.rpt`](Reports/lvs.netgen.rpt) | Full device/net match report from Netgen LVS |
 | [`GDS/uart_top.gds`](GDS/uart_top.gds) | Final manufacturing-ready GDSII file |
 
-> A `docs/pd_notes.md` study-guide-style writeup (design decisions, debugging journey, interview prep) is planned as a future addition, in the same spirit as a project retrospective — not yet written as of this commit.
+> **Supplementary exercises** — additional PD analysis written as standalone study guides, each breaking the design deliberately to expose real tool behaviour:
+>
+> - **[Exercise 1 — Break, Diagnose and Fix Timing](Exercise1_Timing/):** Pushed clock to 5ns, watched 319 violations appear, traced worst path, ran ECO sizing (201 iterations, 21% improvement, then hit a real ceiling), and documented why RTL pipelining is the only genuine fix beyond that boundary.
+> - **[Exercise 2 — Floorplan and Congestion Boundary](Exercise2_Congestion/):** Systematically pushed core utilisation from 40% to 96% to find what breaks first — legalization headroom (`DPL-0036`) at 61%, not routing congestion (`GRT-0118`). Discovered hold violations through physical proximity at high density (same root cause, different mechanism to Exercise 1). Quantified die area savings: 29% smaller at 60% vs 40%.
+> - **[Exercise 3 — Manual OpenROAD Driving](Exercise3_ManualPD/):** Loaded a raw floorplan database and drove global placement, legalization, and CTS manually via Tcl — step by step, reading each result before deciding the next move. Caught two session errors (`CTS-0065`, `ORD-0047`), tested and falsified two concrete hypotheses about CTS discrepancies, fixed a real hold violation with `repair_timing -hold`, and traced the same five-gate worst path from Exercise 1 appearing again with different cell strengths — proving how much invisible cell-strengthening the automated flow's resizer passes do.
+
+---
+
+## 15. Supplementary Exercises
+
+Three standalone exercises that deliberately stress the completed UART design to expose real tool behaviour — each built on the results of this main project.
+
+| Exercise | What It Broke | Key Finding |
+|----------|--------------|-------------|
+| [Exercise 1 — Break, Diagnose and Fix Timing](Exercise1_Timing/) | Clock period pushed to 5ns | ECO sizing improved TNS by 21% across 201 iterations, then hit a structural ceiling — worst path needed RTL pipelining, not cell swapping |
+| [Exercise 2 — Floorplan and Congestion Boundary](Exercise2_Congestion/) | Core utilisation pushed to 96% | Legalization failed at 61% (not routing congestion); hold violations appeared at high density through physical proximity — same root cause as Exercise 1, different mechanism |
+| [Exercise 3 — Manual OpenROAD Driving](Exercise3_ManualPD/) | Automated flow replaced with step-by-step Tcl commands | Same five-gate worst-path from Exercise 1 reappeared with weaker cells, proving how much the automated flow's resizer passes strengthen cells invisibly |
 
 ---
 
