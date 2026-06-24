@@ -10,7 +10,7 @@ Five connected projects spanning RTL design, UVM verification, and physical impl
 |---|---------|--------|-----------------|
 | 1 | [SPI Master — RTL & Directed Verification](P1_SPI_Master_RTL_Directed_Verification/) | ✅ Week 1 complete · 🟡 Week 2 (UVM) in progress | SystemVerilog FSM, directed testbench, 6/6 tests passing |
 | 2 | [AXI4-Lite Verification IP](P2_AXI4_Lite_UVM_Verification/) | 🟡 In progress | UVM environment — driver, monitor, scoreboard, sequences |
-| 3 | [UART RTL-to-GDSII (OpenLane/SKY130)](P3_RTL_to_GDSII_OpenLane_SKY130/) | ✅ Complete | Full physical design flow — synthesis through GDSII, 0 STA violations across 9 corners, clean DRC/LVS |
+| 3 | [UART RTL-to-GDSII (OpenLane/SKY130)](P3_RTL_to_GDSII_OpenLane_SKY130/) | ✅ Complete + 3 exercises | Full physical design flow — synthesis through GDSII, 0 STA violations across 9 corners, clean DRC/LVS · Exercises: timing stress-test, congestion boundary hunt, manual OpenROAD Tcl driving |
 | 4 | [STA Timing Closure](P4_STA_Timing_Closure/) | 🟡 In progress | Custom SDC constraints, timing closure, ECO fixes |
 | 5 | [RISC-V ALU — Full Stack Integration](P5_RISCV_ALU_Full_Stack/) | 🟡 In progress | RTL → synthesis → P&R → GDSII for a RISC-V ALU block |
 
