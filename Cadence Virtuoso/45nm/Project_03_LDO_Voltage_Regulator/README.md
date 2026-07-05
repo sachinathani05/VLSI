@@ -120,8 +120,6 @@ Rsource (300Ω in series with M0 source) adds source degeneration, reducing M0 g
 ![LDO_Core2 Schematic](Image/LDO_Core2_Schematic.jpg)
 *LDO_Core2 full schematic — OTA_LDO instance (I1), M0 buffer, MP pass transistor array (M1–M5), compensation network (Rgate, Cgate, Rsource), feedback divider (R1, R2, Cfeedforward), and load (Cout).*
 
-![LDO Testbench Schematic](Image/LDO_TB_Schematic.jpg)
-*LDO_tb2 testbench — VIN source, VREF = 0.6V, load current source Iload, iprobe IPRB0 between VFB and OTA VIN+ for STB analysis.*
 
 ---
 
@@ -358,8 +356,6 @@ After several schematic changes, simulations continued producing results inconsi
 | MP Vgs | ~−0.9V | < 0 (PMOS conducting) | ✅ Saturation |
 | IOUT (total) | 25.0mA | = Iload | ✅ Regulating |
 
-![DC Operating Point](Image/DC_Operating_Point.jpg)
-*DC operating point annotation — all key node voltages and device currents at TT/27°C, Iload=25mA. All transistors in saturation, VOUT regulated at 1.200V.*
 
 ### 10.2 ADE XL STB Simulation Setup
 
@@ -416,10 +412,14 @@ LDO stability changes dramatically with load because the dominant pole at VOUT i
 
 PM increases monotonically from 46.57° at 100µA to 74.99° at 50mA — expected behaviour from the load-dependent dominant pole.
 
-![STB Bode Plot — Schematic](Image/STB_Bode_Schematic.jpg)
+![STB Bode Plot — Schematic](Image/STB_Bode_Schematic.png)
 *Schematic-level STB Bode plot — loop gain magnitude (dB) and phase (°) at representative load points. GBW and PM labelled at 100µA (worst case) and 50mA (best case).*
 
 ### 10.5 PVT Corner Analysis (Iload = 25mA)
+
+![Corner Sweep — PVT Results](Image/Corner_Sweep.png)
+*PVT corner sweep — 9 combinations (TT/SS/FF × −40/27/125°C) at Iload=25mA. Phase margin range: 64.57°–74.44°, all passing 45° target.*
+
 
 | Corner | −40°C | 27°C | 125°C |
 |---|---|---|---|
@@ -447,8 +447,11 @@ Line reg = ΔVOUT / ΔVIN = ΔVOUT / ΔV across (VIN = 1.4V to 2.0V)
 **Why load regulation is excellent:**  
 Load regulation is determined by the LDO's output impedance: Rout_LDO = Rout_MP / (1 + Loop_Gain). With DC loop gain ~80–120dB (10,000–1,000,000×), Rout_LDO is reduced by this factor from the open-loop pass transistor impedance — resulting in sub-millivolt VOUT variation across the full 50mA swing.
 
-![Line and Load Regulation](Image/Line_Load_Regulation.jpg)
-*VOUT vs VIN (line regulation, 0.19mV/V slope) and VOUT vs Iload (load regulation, 0.094mV total variation).*
+![Line Regulation](Image/Line_Regulation.jpg)
+*VOUT vs VIN sweep — line regulation measured at 0.19mV/V slope across VIN = 1.4V–2.0V.*
+
+![Load Regulation](Image/Load_Regulation.jpg)
+*VOUT vs Iload — load regulation 0.094mV total variation from 0 to 50mA.*
 
 ### 10.7 PSR Results
 
@@ -460,7 +463,7 @@ Load regulation is determined by the LDO's output impedance: Rout_LDO = Rout_MP 
 
 The 1MHz PSR failure is a fundamental limitation of this topology without dedicated PSRR boosting. At high frequency, the error amplifier loop gain has dropped to ~unity and supply noise couples directly through the pass transistor's gate capacitance to VOUT. This is a marginal miss (0.2dB) and would be addressed in a next revision by adding a supply noise filtering capacitor on the OTA VDD or using a regulated cascode topology.
 
-![PSR Plot](Image/PSR_Plot.jpg)
+![PSR Plot](Image/PSR_Plot.png)
 *PSR (dB) vs frequency — 71.8dB at 100Hz, 57.8dB at 1kHz, crossing 0dB near 1MHz. Feedthrough through MP gate capacitance limits high-frequency PSR.*
 
 ### 10.8 Transient Response — Load Step
@@ -472,7 +475,7 @@ The 1MHz PSR failure is a fundamental limitation of this topology without dedica
 
 The slower recovery on step-down is due to limited charge storage at Cout=100pF — after the load current drops suddenly, Cout must charge to pull VOUT up against the loop's response time. In production designs, a larger off-chip Cout (1–10µF ceramic) would reduce both deviation and recovery time by orders of magnitude.
 
-![Transient Response](Image/Transient_Response.jpg)
+![Transient Response](Image/trans%20resp.jpg)
 *VOUT transient during load steps: 1mA→50mA (225.8mV undershoot, ~1µs recovery) and 50mA→1mA (194.3mV overshoot, ~300µs recovery).*
 
 ---
@@ -558,8 +561,6 @@ DRC run using Assura. **Final result: 0 violations — CLEAN.**
 | POLY.E.3 | Active to gate enclosure < 0.1µm | 2 | Cap instance not snapped to grid after placement | Resolved after adding Nwell/Ptap context around cap |
 | LATCHUP.1 | P+ source/drain > 30µm from Ntap | 38 | MP array 1800µm wide with no internal taps | Added continuous Ntap strips above and below MP array |
 
-![DRC Clean Summary](Image/DRC_Clean_Summary.jpg)
-*Assura DRC summary — 0 violations after all fixes applied.*
 
 ---
 
@@ -587,8 +588,6 @@ DRC run using Assura. **Final result: 0 violations — CLEAN.**
 | 4 | R1/R2 length: 138.46µm (schematic) vs 69.23µm (layout) | LVS compares total length vs per-segment length for 2-segment resistors | Each R1/R2 is 2 segments: 2 × 69.23µm = 138.46µm total. LVS sees schematic total vs per-segment layout value. Electrical resistance is identical. |
 | 5 | badmatch: net020/net22 | Downstream consequence of waivers 1–3 | Once waivers 1–3 are accepted, this badmatch is automatically explained as a dependent waiver. |
 
-![LVS Matched Summary](Image/LVS_Matched_Summary.jpg)
-*Assura LVS summary — all devices matched, all nets matched, 5 documented waivers.*
 
 ---
 
@@ -722,8 +721,6 @@ The following setup was required for every post-layout STB run:
 
 Post-layout PM correlates within 3–5° of schematic across all load points. The 43.1° at 100µA is a marginal miss against the 45° target — attributed to the g45ncap1 ideal substitution (c=1.508p) slightly altering the compensation network response vs. the designed 1.508pF + its own parasitics.
 
-![Post-Layout STB Bode Plot](Image/PostLayout_STB_Bode.jpg)
-*Post-layout STB Bode plot at Iload=25mA, TT/27°C — PM=69.8°, GBW=22.8MHz. Schematic overlay shown for comparison.*
 
 ### 14.8 Post-Layout PVT Corners (Iload = 25mA, C-only extraction)
 
