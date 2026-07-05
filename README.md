@@ -51,53 +51,53 @@ VLSI/
 
 ## Highlights
 
-### 45nm Two-Stage Miller-Compensated OTA (GPDK045) ✅
-Complete schematic-to-signoff analog IC design in Cadence Virtuoso 45nm.
+### Cadence Virtuoso — Analog IC Design
 
-- **DC:** All signal-path devices in saturation. VOUT = 0.600V at mid-rail. M1/M2 matched within 0.3%.
-- **AC:** DC gain 75.6 dB · GBW 57.5 MHz · Phase margin 60.9° (TT/27°C)
-- **Transient:** SR rising 64.5 V/µs · SR falling 55 V/µs · Settling 18.6 ns rising
-- **Noise:** Thermal floor 9.5 nV/√Hz · Flicker corner 1.4 MHz
-- **CMRR:** 76.4 dB · **PSRR:** 164.4 dB
-- **Corner sweep:** 9 corners (TT/SS/FF × −40/27/125°C) — FF corner identified as marginal, fix proposed
-- **Layout signoff:** DRC clean (0 violations) · LVS matched (2 documented waivers) · PEX extracted
-- **Post-layout debugging:** Root-caused an LVS-vs-RCX extraction discrepancy, a tail-node substrate short, and a structural M6 finger-wiring defect (series chain instead of parallel) — fully documented with proposed fix as a known limitation
+**90nm GPDK090**
 
-### 65nm UMC Standard Cell Design (EEE8127 — Newcastle University)
-Complete CMOS IC design flow in UMC 65nm using Cadence Virtuoso + Mentor Calibre.
+| Project | Key Results |
+|---------|-------------|
+| [CMOS Inverter](Cadence%20Virtuoso/90nm%20(GPDK090)/CMOS%20Inverter/) | Schematic · Layout · DRC/LVS · DC/transient simulation · VM parametric sweep · LTSpice cross-validation |
+| [Ring Oscillator](Cadence%20Virtuoso/90nm%20(GPDK090)/Ring%20Oscillator/) | **f = 1.45 GHz** (tp = 115 ps/stage) · W-L parametric sweep · freq/power CSV + plots |
 
-- **Inverter:** Logical Effort sizing (2:1 → 1.6:1 corrected for dual-contact DRC rule). Post-PEX: tpHL +12.3%, energy/cycle +42.6%.
-- **Fanout:** LE model validated FO0–FO4. Cin(schematic) = 0.703 fF, Cin(extracted) = 1.078 fF (+53%). LE overestimates delay by 60% at FO4.
-- **Wire Delay:** Elmore RC validated. Crossover at ~55µm. Measured capacitance: 0.113 fF/µm.
-- **Energy–VDD:** 48-stage chain sweep. MEP at 0.8V (+25.5% energy saving). EDP minimum at 1.2–1.4V.
+**65nm UMC — Standard Cell Design (EEE8127, Newcastle University)**
 
-### SPI Master RTL Design & Directed Verification (P1 of 5)
-Parameterised SPI Master in SystemVerilog — 5-state Moore FSM, Mode 0.
+| Experiment | Key Result |
+|-----------|------------|
+| Inverter — full DRC/LVS/PEX | Post-PEX: tpHL +12.3%, energy/cycle +42.6% vs schematic |
+| Fanout analysis (FO0–FO4) | Cin extracted = 1.078 fF vs schematic 0.703 fF (+53%). LE overestimates delay by 60% at FO4 |
+| Wire delay — Elmore RC | Schematic-to-measured crossover at ~55µm. Capacitance 0.113 fF/µm (matches PDK) |
+| Energy–VDD sweep (48-stage chain) | MEP at 0.8V (+25.5% energy saving). EDP minimum at 1.2–1.4V |
 
-- **Result:** 6/6 directed tests passing — 0 failures
-- **Patterns tested:** Alternating bits (0xA5, 0x55), all-ones, all-zeros, LSB-only, MSB-only
-- **Bugs documented:** 6 real RTL bugs found and fixed during development
-- **Next:** Week 2 — UVM environment (seq_item → driver → monitor → scoreboard)
+**45nm GPDK045 — Analog IC Design Series**
 
-### UART — Full RTL-to-GDSII Flow (OpenLane/SKY130)
-Complete physical design flow from RTL to manufacturing-ready GDSII using OpenLane 2, Yosys, OpenROAD, Magic, KLayout, and Netgen.
+| Project | Key Results | Status |
+|---------|-------------|--------|
+| [P01 — Two-Stage Miller OTA](Cadence%20Virtuoso/45nm/Project_01_Two_Stage_OTA_45nm/) | Gain 75.6 dB · GBW 57.5 MHz · PM 60.9° · CMRR 76.4 dB · PSRR 164.4 dB · 9-corner sweep · DRC/LVS/PEX | ✅ Complete |
+| [P02 — OTA_LDO Error Amplifier](Cadence%20Virtuoso/45nm/Project_02_OTA_LDO_Error_Amplifier/) | Gain 79.1 dB · GBW 46.87 MHz · PM 77.5° · DRC/LVS clean · M6/M7 parallel strapping fix | ✅ Complete |
+| [P03 — 1.2V LDO Voltage Regulator](Cadence%20Virtuoso/45nm/Project_03_LDO_Voltage_Regulator/) | PM 46.57°–74.99° (schematic) · Post-layout 43.1°–73.8° · 9 PVT corners · DRC/LVS · C-only PEX | ✅ Complete |
 
-- **Synthesis:** 267 cells, 60 flip-flops, 3034.16 µm² — 0 CHECK problems
-- **STA:** **0 setup/hold violations across all 9 PVT corners** — worst setup 10.55 ns, worst hold 0.144 ns
-- **CTS:** Real measured clock skew ~1.6 ps
-- **Routing:** 0 congestion overflow, 0 antenna violations, 0 DRC violations
-- **Sign-off:** DRC clean (Magic + KLayout cross-check), LVS matched uniquely (Netgen)
-- **Output:** 3 GDSII files generated, foundry-submission ready
+---
+
+### RTL-to-GDSII Projects
+
+**SPI Master — RTL Design & Directed Verification (P1 of 5)**
+
+- SystemVerilog 5-state Moore FSM, Mode 0 · 6/6 directed tests passing · 6 RTL bugs found and fixed
+- Next: Week 2 UVM environment (seq_item → driver → monitor → scoreboard)
+
+**UART — Full RTL-to-GDSII Flow (OpenLane/SKY130) ✅**
+
+- **Synthesis:** 267 cells · 60 flip-flops · 3034.16 µm² · 0 CHECK problems
+- **STA:** 0 setup/hold violations across all 9 PVT corners · worst setup 10.55 ns · worst hold 0.144 ns
+- **Routing:** 0 congestion overflow · 0 antenna violations · 0 DRC violations
+- **Sign-off:** DRC clean (Magic + KLayout cross-check) · LVS matched uniquely (Netgen) · 3 GDSII files exported
 - **Exercises:** [Timing stress-test & ECO ceiling](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise1_Timing/) · [Congestion boundary hunt](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise2_Congestion/) · [Manual OpenROAD Tcl driving](RTL_to_GDSII_Projects/P3_RTL_to_GDSII_OpenLane_SKY130/Exercise3_ManualPD/)
 
-### 90nm Ring Oscillator (GPDK090)
-3-stage CMOS ring oscillator. Measured frequency: **1.45 GHz** (tp = 115 ps/stage). W-L parametric sweep with CSV + plots.
-
-### 90nm CMOS Inverter (GPDK090)
-Schematic, layout, DRC/LVS. DC transfer characteristic, transient propagation delay, VM parametric sweep. Cross-validated in LTSpice.
+---
 
 ### RTOS in M68K Assembly (EEE8087 — Newcastle University)
-Built from scratch. Round-robin scheduler, 16-register context switching, mutex, 6 system calls via `trap #0`.
+Built from scratch on EASy68K. Round-robin scheduler · 16-register context switching · mutex · 6 system calls via `trap #0`.
 
 ---
 
