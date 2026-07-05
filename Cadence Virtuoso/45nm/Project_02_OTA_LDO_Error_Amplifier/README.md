@@ -260,8 +260,6 @@ DRC run using Assura 4.1 (32-bit) with the GPDK045 rule deck. **Final result: 0 
 
 > **CONT.SP.2 note:** The 50 violations are entirely inside M6's Pcell-generated internal contact array. These are a known characteristic of large-NF Pcells in the GPDK045 rule deck and do not represent a real spacing violation in the physical design. They are documented here for completeness.
 
-![DRC Clean Summary](Image/DRC_Clean_Summary.jpg)
-*Assura DRC summary — 0 violations after all fixes applied.*
 
 ---
 
@@ -286,11 +284,7 @@ LVS run using Assura 4.1 comparing OTA_LDO layout vs OTA_LDO schematic. **Final 
 | VOUT/VSS pin short | VOUT net shorted to VSS in extracted netlist | Physical Metal1 short between VOUT routing and VSS rail in layout | Located via RVE cross-probe. Removed the offending Metal1 overlap between VOUT rail and VSS rail |
 | Missing pin purpose labels | VOUT and VSS ports not recognised as ports by extractor | Metal1 rectangles for VOUT and VSS pins had `drawing` purpose instead of `pin` purpose | Changed layer purpose on both rectangles from `metal1 drawing` to `metal1 pin` in the LSW |
 
-![LVS Matched Summary](Image/LVS_Matched_Summary.jpg)
-*Assura LVS summary — all devices matched, all nets matched, 2 waivers visible.*
 
-![LVS CLS Report](Image/LVS_CLS_Report.jpg)
-*LVS .cls report — matched device count: 8× g45n1svt, 4× g45p1svt, 1× g45ncap1, 1× g45rspp.*
 
 ---
 
