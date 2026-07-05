@@ -149,8 +149,8 @@ Rz connects from M6 gate (net25) to the Cc gate (net029). Cc connects from net02
 | Rz — g45rspp Pcell | ✅ Complete |
 | DRC (Assura) | ✅ 0 violations |
 | LVS (Assura) | ✅ Matched — 2 formal waivers + 1 limitation note (see §11) |
-| PEX (Assura RCX) | ⏳ Next step |
-| Post-PEX STB | ⏳ Next step |
+| PEX (Assura RCX) | ✅ Complete |
+| Post-PEX STB | ✅ Complete |
 
 ![Full OTA_LDO Layout](Image/OTA_LDO_Full_Layout.jpg)
 *Top-level Virtuoso layout — ABBA common-centroid differential pair, M3/M4 PMOS load, M5 tail, M6/M7 second stage, M8 bias, Cc 4×4 array, Rz Pcell, guard rings.*
