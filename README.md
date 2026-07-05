@@ -16,7 +16,9 @@ VLSI/
 │   ├── 65nm (UMC)/
 │   │   └── Standard Cell Design (EEE8127)/  ← Inverter · Tri-State Inv · DFF · Fanout · Wire delay · Energy-VDD
 │   └── 45nm/
-│       └── Project_01_Two_Stage_OTA_45nm/   ← AC · DC · Transient · Noise · CMRR · PSRR · Corner sweep
+│       ├── Project_01_Two_Stage_OTA_45nm/   ← ✅ AC · DC · Transient · Noise · CMRR · PSRR · Corner sweep · DRC/LVS/PEX
+│       ├── Project_02_OTA_LDO_Error_Amplifier/ ← ✅ 79.1dB · 46.87MHz GBW · 77.5° PM · DRC/LVS clean
+│       └── Project_03_LDO_Voltage_Regulator/   ← ✅ 1.2V/50mA · 9 PVT corners · DRC/LVS/PEX · post-layout verified
 ├── RTL_to_GDSII_Projects/
 │   ├── P1_SPI_Master_RTL_Directed_Verification/  ← SPI Mode 0 FSM · 6/6 directed tests passing
 │   ├── P2_AXI4_Lite_UVM_Verification/            ← In progress
@@ -107,7 +109,6 @@ Built from scratch. Round-robin scheduler, 16-register context switching, mutex,
 | AXI4-Lite Verification IP | Verification | SystemVerilog · UVM |
 | STA Timing Closure (custom RTL) | Physical Design | OpenSTA · SDC · TCL |
 | RISC-V ALU — Full Stack Integration | Full Stack | RTL → Synthesis → P&R → GDSII |
-| Low-Dropout Regulator (LDO) | Analog | Cadence Virtuoso 45nm |
 | 6T SRAM, StrongARM, SC Integrator | Analog | Cadence Virtuoso 45nm |
 
 ---
