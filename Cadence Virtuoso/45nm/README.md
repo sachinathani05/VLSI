@@ -13,7 +13,7 @@
 | 01 | [Two-Stage Miller-Compensated OTA](Project_01_Two_Stage_OTA_45nm/) | ✅ Complete | Schematic → DC/AC/Transient/Noise/CMRR/PSRR → Corner sweep (9 PVT) → Layout → DRC/LVS/PEX signoff · M6 series-chain defect found and root-caused |
 | 02 | [OTA_LDO Error Amplifier](Project_02_OTA_LDO_Error_Amplifier/) | ✅ Complete | Schematic → Layout → DRC (0 violations) → LVS (2 waivers) → STB verified: 79.1 dB · 46.87 MHz GBW · 77.5° PM · M6/M7 parallel strapping fix |
 | 03 | [1.2V LDO Voltage Regulator](Project_03_LDO_Voltage_Regulator/) | ✅ Complete | Full sub-system: OTA_LDO + MP pass array + compensation network → Schematic STB (46.57°–74.99° across 100µA–50mA) → Layout → DRC/LVS → C-only PEX → Post-layout STB (43.1°–73.8° all 9 PVT corners) |
-| 04 | 6T SRAM Bit-Cell Array | 🔜 Planned | SNM butterfly curves · Read/write margin · DRC/LVS · Yield analysis |
+| 04 | [6T SRAM Bit-Cell & 8×8 Array + Read Path](Project_04_6T_SRAM%20_Bit-Cell_Array_(8×8)/) | ✅ Complete | SNM butterfly curves · Read/Write margin · Monte Carlo yield · DRC/LVS · Pre/post-layout · Sense amp · Precharge/EQ · Full 8×8 read-path integration (schematic + PEX) |
 | 05 | StrongARM Latch | 🔜 Planned | Metastability · Common-centroid layout · PEX timing |
 | 06 | Switched-Capacitor Integrator | 🔜 Planned | Charge injection · Capacitor matching · MOM layout |
 
@@ -62,6 +62,21 @@
 | Dropout @ 50mA | ~220mV |
 | DRC | ✅ 0 violations |
 | LVS | ✅ Matched (5 waivers) |
+
+### Project 04 — 6T SRAM Bit-Cell & 8×8 Array
+
+| Parameter | Result |
+|---|---|
+| Final sizing | CR=2.5 (PD=450nm/PG=180nm) · PR=0.67 (PU=120nm) |
+| Read SNM — pre / post-layout | 140.0mV / 138.6mV |
+| Hold SNM — pre / post-layout | 303mV / 303.1mV |
+| Write Margin — pre / post-layout | 0.703V / 0.703V |
+| Read SNM worst corner | SF @ 125°C = 53.6mV (documented limitation) |
+| Monte Carlo yield (200 runs, SNM > 100mV) | Mean=120.7mV · σ=10.1mV · 98.5% |
+| 8×8 array BL capacitance / access time | 3.22fF / 11.2ps |
+| Full read-path integration | ✅ PASSED — schematic + post-layout (precharge_eq + 8×8 array + sense_amp) |
+| DRC (bit-cell + array) | ✅ 0 violations |
+| LVS (bit-cell + array) | ✅ Matched |
 
 ---
 
