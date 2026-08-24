@@ -18,7 +18,8 @@ VLSI/
 │   └── 45nm/
 │       ├── Project_01_Two_Stage_OTA_45nm/   ← ✅ AC · DC · Transient · Noise · CMRR · PSRR · Corner sweep · DRC/LVS/PEX
 │       ├── Project_02_OTA_LDO_Error_Amplifier/ ← ✅ 79.1dB · 46.87MHz GBW · 77.5° PM · DRC/LVS clean
-│       └── Project_03_LDO_Voltage_Regulator/   ← ✅ 1.2V/50mA · 9 PVT corners · DRC/LVS/PEX · post-layout verified
+│       ├── Project_03_LDO_Voltage_Regulator/   ← ✅ 1.2V/50mA · 9 PVT corners · DRC/LVS/PEX · post-layout verified
+│       └── Project_04_6T_SRAM_Bit-Cell_Array/  ← ✅ CR=2.5 · Read SNM 140.0mV · MC yield 98.5% · 8×8 array · full read-path integration
 ├── RTL_to_GDSII_Projects/
 │   ├── P1_SPI_Master_RTL_Directed_Verification/  ← SPI Mode 0 FSM · 6/6 directed tests passing
 │   ├── P2_AXI4_Lite_UVM_Verification/            ← In progress
@@ -109,7 +110,7 @@ Built from scratch on EASy68K. Round-robin scheduler · 16-register context swit
 | AXI4-Lite Verification IP | Verification | SystemVerilog · UVM |
 | STA Timing Closure (custom RTL) | Physical Design | OpenSTA · SDC · TCL |
 | RISC-V ALU — Full Stack Integration | Full Stack | RTL → Synthesis → P&R → GDSII |
-| 6T SRAM, StrongARM, SC Integrator | Analog | Cadence Virtuoso 45nm |
+| StrongARM Latch, SC Integrator | Analog | Cadence Virtuoso 45nm |
 
 ---
 
