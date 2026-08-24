@@ -112,6 +112,9 @@ If PD, PG, and PU are all scaled up together, CR and PR — both ratios — are 
 
 PG is the fixed reference width; PD = CR × W_PG; PU = PR × W_PG. Cross-coupled wiring: PD1/PU1 drain and PG1 source → Q; PD2/PU2 drain and PG2 source → QB; PD1/PU1 gate ← QB; PD2/PU2 gate ← Q; PG1/PG2 gate ← WL; PG1 drain ← BL; PG2 drain ← BLB. All NMOS bulk → VSS, all PMOS bulk → VDD.
 
+![Bit-Cell Schematic](Images/sram_6t_bit-cell_schematic.jpg)
+*sram_6t schematic — cross-coupled inverters (PD1/PU1, PD2/PU2) and access transistors (PG1, PG2), Q/QB/BL/BLB/WL labelled.*
+
 ### 4.2 Bistability — Why Cross-Coupling (Not Self-Looping) Stores Data
 
 Each inverter's gate is driven by the *other* inverter's output, not its own. This positive-feedback loop gives the cell two stable states instead of one. A thought experiment: if an inverter's output were tied to its own input (no cross-coupling), forcing Q to 0V and releasing it would cause Q to drift to the inverter's own switching threshold (~VDD/2) and sit there — a single, unstable, noise-sensitive equilibrium, not a stored bit. Cross-coupling converts this into two genuinely stable, noise-resistant rails.
@@ -145,7 +148,7 @@ SNM is the side length of the largest square inscribable in one "eye" of the but
 | Read SNM | VDD | VDD | VDD |
 | Hold SNM | 0V | don't care | don't care |
 
-![SNM Butterfly Curve](Image/SNM.png)
+![SNM Butterfly Curve](Images/SNM.jpg)
 *Butterfly curve — Read SNM at nominal (TT/27°C), final locked sizing (CR=2.5).*
 
 ---
@@ -200,7 +203,7 @@ SNM rises monotonically with CR — a stronger PD relative to PG resists the rea
 | SF | 324.0 | 291.5 | 256.3 |
 | FS | 336.1 | 304.5 | 269.6 |
 
-![Hold SNM](Image/Hold.png)
+![Hold SNM](Images/Hold.jpg)
 *Hold SNM butterfly curve — WL=0, storage nodes isolated from BL/BLB.*
 
 Hold SNM is roughly 2× Read SNM at CR=2.5, consistent with the read-disturb divider (§3.2) not existing when WL=0 — nothing external can disturb Q/QB in hold, so it is never the risky condition.
@@ -223,7 +226,7 @@ Write Margin uses the natural closed-loop cell (no forcing sources) — WL=VDD, 
 
 PR=1.0 still produced a sharp, decisive flip rather than a marginal one — consistent with the true electrical 50/50 tie sitting above PR=1 (§3.3).
 
-![Write Margin Curve](Image/WM.png)
+![Write Margin Curve](Images/WM.jpg)
 *Write Margin trip-point curve — Q vs. swept BL, nominal TT/27°C, final sizing.*
 
 ### 8.3 Corner / Temperature Table (VDD−trip, V, Final CR=2.5)
@@ -236,7 +239,7 @@ PR=1.0 still produced a sharp, decisive flip rather than a marginal one — cons
 | SF | 0.743 | 0.692 | 0.633 |
 | FS | 0.733 | 0.672 | 0.613 |
 
-![Write Margin Corner Sweep](Image/Corner_WM.png)
+![Write Margin Corner Sweep](Images/Corner%20WM.jpg)
 *Write Margin across all 5 corners × 3 temperatures at the final CR=2.5 sizing.*
 
 At the earlier CR=1.67 sizing, FF@125°C failed to converge via the DC-sweep method (the solver settled near VDD/2 instead of a true Q=1 state, even with a two-node nodeset). At the final CR=2.5 sizing, this corner converged cleanly (0.513V) — the convergence issue did not recur. Separately, the underlying functional concern for the historical CR=1.67 case was independently confirmed via a transient-based write test (pulsed WL/BL, transient IC instead of DC nodeset) at FF/125°C, which showed a clean write (Q: 1.2V → ~0V).
@@ -277,10 +280,10 @@ Investigation ruled out several hypotheses: mismatch-section confusion (result w
 | 2.00 | 360nm | 110.3mV | 110.7mV | 11.5mV | 81.5% |
 | 2.50 | 450nm (locked) | 120.3mV *(later found incorrect — true value 140.0mV, §9.4)* | 120.7mV | 10.1mV | **98.5%** |
 
-![Monte Carlo Histogram — CR Sweep](Image/SRAM_SNM_MC_Histogram.png)
+![Monte Carlo Histogram — CR Sweep](Images/SRAM_SNM_MC_Histogram.jpg)
 *Monte Carlo SNM distribution across the CR sweep.*
 
-![Monte Carlo Histogram — CR=2.5 Final](Image/SRAM_SNM_MC_CR25_Histogram_1.png)
+![Monte Carlo Histogram — CR=2.5 Final](Images/SRAM_SNM_MC_CR25_Histogram_1.jpg)
 *Monte Carlo SNM distribution at the final locked sizing (CR=2.5), 200 runs — mean=120.7mV, σ=10.1mV, yield=98.5%.*
 
 **Yield decision:** CR=2.5, mean=120.7mV, σ=10.1mV, yield=98.5% against the 99% target — the ~0.5% shortfall is within normal sampling variation for 200 runs and was accepted, given the diminishing returns and area cost of pushing CR further.
@@ -299,10 +302,10 @@ Purpose: validate testbench mechanics only (pulse timing, initial conditions, pr
 
 **Write test:** WL pulsed 0→VDD, BL=0V/BLB=1.2V (write-'0'). Q flipped cleanly from ~1.2V to ~0V in sync with the WL edge. PASSED.
 
-![Transient Read](Image/Trans_Read.png)
+![Transient Read](Images/Trans_Read.jpg)
 *Pre-layout transient read test — Q/QB/WL/BL/BLB waveforms.*
 
-![Transient Write](Image/Trans_Write.png)
+![Transient Write](Images/Trans_Write.jpg)
 *Pre-layout transient write test — Q collapsing cleanly from 1.2V to 0V.*
 
 ---
@@ -318,6 +321,9 @@ A transistor's diffusion order (source-gate-drain) is fixed by orientation. An i
 ### 11.2 Shared Vertical Gate
 
 PU and PD in a CMOS inverter share the same gate net. Stacking them with poly gates vertically aligned lets one continuous poly rectangle serve as the shared gate, avoiding a metal jumper (extra contact resistance and area).
+
+![Bit-Cell Layout](Images/sram_6t_bit-cell_layout.jpg)
+*sram_6t layout — mirrored PD/PU stacks, shared vertical poly gate, PMOS/NMOS guard rings.*
 
 ### 11.3 DRC Debug History
 
@@ -364,6 +370,9 @@ The Read SNM methodology assumes BL=BLB=VDD before a read begins; this circuit m
 | PC2 | VDD | PCH | BLB | VDD | 180nm | 45nm |
 | EQ1 | BL | PCH | BLB | VDD | 180nm | 45nm |
 
+![Precharge/Equalization Schematic](Images/precharge_eq_schematic.jpg)
+*precharge_eq schematic — PC1, PC2 (precharge pull-ups), EQ1 (equalization device).*
+
 ### 13.3 Debug History — Equalizer Gate Miswired to VDD
 
 EQ1's gate was initially tied directly to VDD instead of PCH, permanently disabling it. Diagnosed by deliberately unbalancing BL/BLB (IC: BL=0.3V, BLB=0.9V) and observing the residual gap after the precharge pulse:
@@ -375,10 +384,10 @@ EQ1's gate was initially tied directly to VDD instead of PCH, permanently disabl
 
 A ~2.3× reduction, real and quantified. Both magnitudes are ~1000× smaller than the smallest SNM margin measured anywhere in this project — no stability risk either way, but the corrected wiring is the physically intended design.
 
-![With Equalization](Image/With_Equalization.png)
+![With Equalization](Images/With_Equalization.jpg)
 *BL/BLB convergence with EQ1 correctly wired — residual gap 78.6µV.*
 
-![Without Equalization](Image/Without_Equalization.png)
+![Without Equalization](Images/Without_Equalization.jpg)
 *BL/BLB convergence with EQ1 disabled — residual gap 182.3µV, roughly 2.3× worse.*
 
 ### 13.4 Functional Test Result
@@ -409,8 +418,8 @@ External pins: VDD, VSS, BL (InOut), BLB (InOut), SA_EN, ISO. OUT, OUTB, SA_TAIL
 
 **Sizing rationale:** SP1/SP2 at 240nm (2× the 180nm NMOS width) follows the standard balanced-inverter rule — explicitly *not* applicable to the SRAM cell's own PU (§3.3), but correctly applicable here, since this latch's only job is a fast, symmetric flip, not a deliberately asymmetric fight against an access transistor.
 
-![Sense Amplifier Schematic](Image/sense_amp.png)
-*Sense amplifier schematic — cross-coupled core (SP1/SP2/SN1/SN2), tail switch (SAE), isolation pair (NI1/NI2).*
+![Sense Amplifier Schematic](Images/sense_amp_schematic.jpg)
+*sense_amp schematic — cross-coupled core (SP1/SP2/SN1/SN2), tail switch (SAE), isolation pair (NI1/NI2).*
 
 ### 14.3 Debug History — Premature Amplification (No Isolation)
 
@@ -441,6 +450,9 @@ The "idle" window (ISO low, SA_EN not yet fired) is not perfectly frozen. OUT/OU
 
 Result: OUT≈1.1998V, OUTB≈0.0001V — correct polarity, full rail-to-rail resolution, from an internal differential as small as ~0.7mV at the moment SA_EN fired.
 
+![Single-Cell Full Read-Path Waveform](Images/sense_amp.jpg)
+*Single-cell full read-path validated sequence — PCH, ISO, WL, SA_EN, Q, QB, and internal sense-amp nodes (I2/net017, I2/net019) resolving over ~7ns.*
+
 ---
 
 ## 15. 4×4 and 8×8 Array Construction
@@ -470,11 +482,14 @@ LVS produced 32 "unconnected pin" warnings (Q/QB × 16 instances) — expected a
 
 Since the mirror-orientation pattern has period 2 and the 4×4 block size (4) is an even multiple of that period, four signed-off 4×4 blocks were tiled directly into a 2×2 super-grid with no per-cell orientation changes needed at the block seams. Inter-block BL/BLB/WL routing at the seams still required explicit connection (abutment alone does not merge same-named nets into one electrical node). DRC clean, LVS clean, PEX extraction completed on the full 8×8 (64-cell) array.
 
-![8x8 Read Path Layout](Image/8x8_Read_Path_Layout.png)
-*8×8 array layout, integrated with precharge and sense amplifier for the full read-path test.*
+![8x8 Array Layout](Images/8×8_array_layout.jpg)
+*8×8 array layout — checkerboard mirror orientation, shared VDD/VSS straps at row boundaries.*
 
-![8x8 Read Path Schematic](Image/8x8_Read_Path_Schematic.png)
-*8×8 array-level schematic — sram_4x4_array (extended), precharge_eq, and sense_amp wired together.*
+![8x8 Array Layout Zoomed](Images/8x8_array_layout_zoomed.jpg)
+*8×8 array layout, zoomed — mirrored cell pairs and shared diffusion/power-rail boundaries visible.*
+
+![8x8 Array Schematic](Images/8x8_array_schematic.jpg)
+*8×8 array-level schematic — 64 sram_6t instances, BL/BLB tied per column, WL tied per row, single shared VDD/VSS.*
 
 ---
 
@@ -506,7 +521,7 @@ Marginal capacitance per additional cell: BL0 ~0.45fF/cell, BLB0 ~0.31fF/cell. L
 
 **Validation against a real simulated data point:** a real capacitor matching the 64-row prediction (28.22fF) was added directly to BL/BLB and simulated. Result: access time ~19-58ps (depending on detection threshold), noticeably *higher* than the linear model's 15.4ps prediction — the model was built from two points deep in a transistor-dominated regime and underestimates once capacitance grows into a regime where RC delay becomes a real contributor. Both the naive estimate and the validated, higher real-simulation result are reported.
 
-![8x8 Transient Graph](Image/8x8_trans_graph.png)
+![8x8 Transient Graph](Images/8%20x%208%20trans%20graph.jpg)
 *8×8 array real access-time transient — WL assertion to BL/BLB differential development.*
 
 ---
@@ -516,6 +531,9 @@ Marginal capacitance per additional cell: BL0 ~0.45fF/cell, BLB0 ~0.31fF/cell. L
 ### 17.1 Purpose
 
 The strongest available end-to-end validation: precharge/equalization, a real PEX-extracted 8×8 array, and the sense amplifier, all wired together and tested as one system, in both schematic and fully-extracted-layout form.
+
+![Full Read-Path Testbench Circuit](Images/array_read_path_tb.jpg)
+*array_read_path_tb — precharge_eq, the 8×8 array, and sense_amp wired together as one system.*
 
 ### 17.2 Debug History — No Amplification (Slow Common-Mode Drift)
 
@@ -528,6 +546,12 @@ After the ISO fix, Q started collapsing from ~1.18V within tens of femtoseconds 
 > This is the single most significant debugging lesson from the array-integration work: the fix came from directly reading the raw netlist text rather than continuing to iterate on waveform-level hypotheses.
 
 ### 17.4 Debug History — Schematic vs Layout Runs Resolving to Opposite Polarity
+
+![Array Read-Path Transient — Schematic Run](Images/8%20x%208%20read%20Path%20schematic.jpg)
+*Full read-path integration transient — schematic-level array run (pre-fix, tight ISO-WL gap).*
+
+![Array Read-Path Transient — Layout Run](Images/8%20x%208%20read%20Path%20layout.jpg)
+*Full read-path integration transient — post-PEX layout array run (pre-fix, tight ISO-WL gap), resolving to the opposite polarity from the schematic run.*
 
 After fixing 17.2 and 17.3, both schematic and layout runs produced clean, fast amplification — but resolved to **opposite final polarities** for the same stored cell value. Investigation compared the trapped differential at the exact instant ISO dropped in both runs:
 
